@@ -1,9 +1,12 @@
+"use client";
+
 /**
  * Kuttanad Flood Prediction System — SVG chart kit.
  * Hand-drawn editorial charts: hairline grids, mono axis labels,
  * no drop shadows, no rounded corners. Every chart ships with a
  * provenance line underneath.
  */
+import { useState } from "react";
 import {
   monsoon2018,
   sarExtent,
@@ -21,6 +24,7 @@ function ChartFrame({
   title,
   provenance,
   tag,
+  figNo,
   className,
   scroll,
 }: {
@@ -28,13 +32,15 @@ function ChartFrame({
   title: string;
   provenance?: string;
   tag?: string;
+  figNo?: string;
   className?: string;
   scroll?: boolean;
 }) {
   return (
     <figure className={cn("border border-paper-line bg-card", className)}>
-      <div className="flex items-center justify-between border-b border-paper-line bg-paper-2/60 px-4 py-2.5">
-        <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-ink">
+      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-paper-line bg-paper-2/60 px-4 py-2.5">
+        <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-ink">
+          {figNo && <span className="text-water">FIG. {figNo} — </span>}
           {title}
         </span>
         {tag && (
@@ -45,7 +51,8 @@ function ChartFrame({
       </div>
       <div className={cn("p-4", scroll && "overflow-x-auto slim-scroll")}>{children}</div>
       {provenance && (
-        <figcaption className="border-t border-paper-line bg-paper-2/40 px-4 py-2 font-mono text-[9px] leading-relaxed tracking-[0.03em] text-ink-soft">
+        <figcaption className="border-t border-paper-line bg-paper-2/40 px-4 py-2 text-[12px] leading-5 text-ink-soft">
+          <span className="font-mono text-[10px] text-ink-soft/80">provenance — </span>
           {provenance}
         </figcaption>
       )}
@@ -89,14 +96,29 @@ export function MonsoonChart({ provenance }: { provenance: string }) {
     { label: "SEPTEMBER", i: 92 },
   ];
 
+  const [hover, setHover] = useState<number | null>(null);
+
+  const onMove = (e: React.PointerEvent<SVGSVGElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const px = ((e.clientX - rect.left) / rect.width) * W;
+    const i = Math.floor((px - L) / dw);
+    if (i >= 0 && i < n) setHover(i);
+    else setHover(null);
+  };
+  const hp = hover != null ? monsoon2018[hover] : null;
+
   return (
     <ChartFrame
       title="Monsoon 2018 — daily rainfall vs river discharge"
       tag="reconstructed"
+      figNo="03"
       provenance={provenance}
     >
+      <div className="relative">
       <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-auto" role="img"
-        aria-label="Daily rainfall bars with river discharge line for the 2018 monsoon, peaking 15 and 16 August">
+        aria-label="Daily rainfall bars with river discharge line for the 2018 monsoon, peaking 15 and 16 August"
+        onPointerMove={onMove}
+        onPointerLeave={() => setHover(null)}>
         {/* event window */}
         <rect x={x(evStart)} y={T} width={(evEnd - evStart) * dw} height={ih} fill="#b4530a" opacity="0.07" />
         <text x={x(evStart) + 4} y={T + 12} className="font-mono" fontSize="8.5" fill="#b4530a" letterSpacing="0.12em">
@@ -162,17 +184,37 @@ export function MonsoonChart({ provenance }: { provenance: string }) {
         <text x={W - R + 8} y={T - 12} className="font-mono" fontSize="8.5" fill="#b4530a" letterSpacing="0.16em">
           DISCHARGE — file units
         </text>
+        {/* hover crosshair */}
+        {hover != null && (
+          <line x1={x(hover) + dw / 2} y1={T} x2={x(hover) + dw / 2} y2={T + ih} stroke="#5f584a" strokeWidth="0.8" opacity="0.6" />
+        )}
       </svg>
+      {hp && (
+        <div
+          className="pointer-events-none absolute z-10 border border-paper-line bg-paper px-3 py-2 font-mono text-[10.5px] leading-relaxed text-ink"
+          style={{
+            left: `${((x(hover!) + dw / 2) / W) * 100}%`,
+            top: 8,
+            transform: x(hover!) > W * 0.6 ? "translateX(-115%)" : "translateX(15px)",
+          }}
+        >
+          <div className="text-water font-semibold">{hp.date}</div>
+          <div>rain · {hp.rain.toFixed(1)} mm</div>
+          <div className="text-flood-deep">discharge · {hp.discharge.toFixed(2)}</div>
+        </div>
+      )}
+      </div>
       <div className="mt-2 flex flex-wrap items-center gap-x-5 gap-y-1.5 px-1">
-        <span className="flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.12em] text-ink-soft">
-          <span className="inline-block size-2.5 bg-water/70" /> daily rainfall
+        <span className="flex items-center gap-2 text-[12px] text-ink-soft">
+          <span className="inline-block size-2.5 bg-water/70" /> daily rainfall (mm)
         </span>
-        <span className="flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.12em] text-ink-soft">
-          <span className="inline-block h-[2px] w-4 bg-ink" /> river discharge
+        <span className="flex items-center gap-2 text-[12px] text-ink-soft">
+          <span className="inline-block h-[2px] w-4 bg-ink" /> river discharge (file units)
         </span>
-        <span className="flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.12em] text-ink-soft">
+        <span className="flex items-center gap-2 text-[12px] text-ink-soft">
           <span className="inline-block size-2.5 bg-flood/15" /> peak event window
         </span>
+        <span className="text-[11px] text-ink-soft/70">hover the chart to inspect daily values</span>
       </div>
     </ChartFrame>
   );
@@ -207,6 +249,7 @@ export function SarChart({ provenance }: { provenance: string }) {
     <ChartFrame
       title="Sentinel-1 SAR — open-water extent, monthly means"
       tag="reconstructed"
+      figNo="07"
       provenance={provenance}
     >
       <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-auto" role="img"
@@ -240,13 +283,13 @@ export function SarChart({ provenance }: { provenance: string }) {
         </text>
       </svg>
       <div className="mt-2 flex flex-wrap items-center gap-x-5 gap-y-1.5 px-1">
-        <span className="flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.12em] text-ink-soft">
-          <span className="inline-block h-[2px] w-4 bg-water" /> monthly mean extent
+        <span className="flex items-center gap-2 text-[12px] text-ink-soft">
+          <span className="inline-block h-[2px] w-4 bg-water" /> monthly mean extent (ha)
         </span>
-        <span className="flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.12em] text-ink-soft">
+        <span className="flex items-center gap-2 text-[12px] text-ink-soft">
           <span className="inline-block size-2.5 rounded-full bg-flood" /> 2018 flood
         </span>
-        <span className="font-mono text-[9px] text-ink-soft/80">
+        <span className="text-[12px] text-ink-soft">
           note — flood extent barely separates from ordinary monsoon (55–60k ha)
         </span>
       </div>
@@ -261,30 +304,31 @@ export function LulcBars({ provenance }: { provenance: string }) {
   return (
     <ChartFrame
       title="Land use / land cover — Bhuvan 2015–16 (1:50K)"
+      figNo="05"
       provenance={provenance}
     >
       <div className="space-y-4 pt-1">
         {lulc.filter(c => c.pct > 0).map((c) => (
           <div key={c.name} className="grid grid-cols-[130px_1fr_88px] items-center gap-3">
-            <span className="font-mono text-[10px] uppercase tracking-[0.08em] text-ink-soft">{c.name}</span>
+            <span className="text-[12px] text-ink-soft">{c.name}</span>
             <div className="h-[18px] bg-paper-2 border border-paper-line">
               <div
                 className="h-full"
                 style={{ width: `${(c.pct / max) * 100}%`, backgroundColor: c.color, opacity: 0.88 }}
               />
             </div>
-            <span className="font-mono text-[10.5px] tab-nums text-ink">
+            <span className="font-mono text-[11px] tab-nums text-ink">
               {c.km2.toFixed(1)} km² · {c.pct}%
             </span>
           </div>
         ))}
         <div className="grid grid-cols-[130px_1fr_88px] items-center gap-3 border-t border-dashed border-paper-line pt-3">
-          <span className="font-mono text-[10px] uppercase tracking-[0.08em] text-ink-soft">Forest</span>
+          <span className="text-[12px] text-ink-soft">Forest</span>
           <div className="h-[18px] border border-dashed border-paper-line" />
-          <span className="font-mono text-[10.5px] tab-nums text-ink-soft">0.0 km² · 0%</span>
+          <span className="font-mono text-[11px] tab-nums text-ink-soft">0.0 km² · 0%</span>
         </div>
       </div>
-      <p className="mt-4 border-l-2 border-flood pl-3 font-mono text-[9.5px] leading-relaxed text-ink-soft">
+      <p className="mt-4 border-l-2 border-flood pl-3 text-[12.5px] leading-5 text-ink-soft">
         Shares total &gt;100% — classes overlap by construction (water bodies counted inside
         wetlands, urban inside built-up). Rendered as separate bars, never as a pie.
       </p>
@@ -319,6 +363,7 @@ export function CoverageGantt({
   return (
     <ChartFrame
       title="Data coverage timeline — what reaches how far back"
+      figNo="06"
       provenance={provenance}
       scroll
     >
@@ -373,12 +418,12 @@ export function CoverageGantt({
       </svg>
       <div className="mt-3 flex flex-wrap gap-x-5 gap-y-1.5 px-1">
         {legend.map((l) => (
-          <span key={l.cat} className="flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.1em] text-ink-soft">
+          <span key={l.cat} className="flex items-center gap-2 text-[12px] text-ink-soft">
             <span className="inline-block size-2.5" style={{ backgroundColor: coverageColors[l.cat] }} />
             {l.label}
           </span>
         ))}
-        <span className="flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.1em] text-ink-soft">
+        <span className="flex items-center gap-2 text-[12px] text-ink-soft">
           <span className="inline-block size-2.5 border border-paper-line bg-paper-2" /> single snapshot
         </span>
       </div>

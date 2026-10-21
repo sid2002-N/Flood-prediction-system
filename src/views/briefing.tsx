@@ -2,28 +2,34 @@
 
 /**
  * Kuttanad Flood Prediction System — Briefing view.
- * A ten-slide research briefing: dark room, big statements,
- * keyboard navigation, progress rule.
+ * A real ten-slide research presentation: varied compositions,
+ * keyboard navigation (arrows, Home/End, Space), slide counter,
+ * progress rule, and an explicit exit back to the dossier.
  */
 import { useCallback, useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { Eyebrow, Tag } from "@/components/research/furniture";
-import { coverage, coverageColors, coverageLegend } from "@/lib/content/series";
-import { phases } from "@/lib/content/status";
+import { monsoon2018 } from "@/lib/content/series";
+import { auditFlags, auditGroups } from "@/lib/content/inventory";
+import { modelConfig } from "@/lib/model-config";
 import { sourceRegistry, site } from "@/lib/content/site";
 import type { ViewKey } from "@/components/site-shell";
 import { cn } from "@/lib/utils";
 
-/* ------------------------------ slide bodies ------------------------------ */
+/* ------------------------------ slide primitives ------------------------------ */
 
-function StatGrid({ items, cols = 3 }: { items: [string, string][]; cols?: number }) {
+function StatGrid({ items }: { items: [string, string][] }) {
   return (
-    <div className={cn("grid gap-px bg-night-line border border-night-line", cols === 2 ? "grid-cols-2" : "grid-cols-2 sm:grid-cols-4", cols === 3 && "lg:grid-cols-3")}>
+    <div className="grid grid-cols-2 gap-px border border-night-line bg-night-line sm:grid-cols-4">
       {items.map(([v, l]) => (
         <div key={l} className="bg-night px-5 py-4">
-          <div className="font-serif text-[24px] md:text-[30px] font-semibold leading-none tab-nums text-paper">{v}</div>
-          <div className="mt-2 font-mono text-[8.5px] uppercase tracking-[0.14em] text-water-bright">{l}</div>
+          <div className="font-serif text-[22px] md:text-[27px] font-semibold leading-none tab-nums text-paper">
+            {v}
+          </div>
+          <div className="mt-2 font-mono text-[9px] uppercase tracking-[0.14em] text-water-bright">
+            {l}
+          </div>
         </div>
       ))}
     </div>
@@ -34,87 +40,183 @@ function SlideTitle({ kicker, children }: { kicker: string; children: React.Reac
   return (
     <>
       <Eyebrow tone="paper">{kicker}</Eyebrow>
-      <h2 className="mt-5 font-serif text-[30px] md:text-[44px] leading-[1.12] font-semibold tracking-tight text-paper max-w-3xl">
+      <h2 className="mt-5 max-w-3xl font-serif text-[28px] leading-[1.14] font-semibold tracking-tight text-paper md:text-[40px]">
         {children}
       </h2>
     </>
   );
 }
 
+/* --------------------------- slide 03 — sparkline --------------------------- */
+
+function EventSparkline() {
+  const W = 640;
+  const H = 170;
+  const L = 10;
+  const R = 14;
+  const T = 14;
+  const B = 26;
+  const iw = W - L - R;
+  const ih = H - T - B;
+  const n = monsoon2018.length;
+  const dw = iw / n;
+  const qMax = 18;
+  const X = (i: number) => L + i * dw + dw / 2;
+  const Y = (v: number) => T + (1 - v / qMax) * ih;
+  const path = monsoon2018
+    .map((d, i) => `${i === 0 ? "M" : "L"} ${X(i)} ${Y(d.discharge)}`)
+    .join(" ");
+  const peakI = 76; // 2018-08-16
+  const months = [
+    { label: "JUN", i: 0 },
+    { label: "JUL", i: 30 },
+    { label: "AUG", i: 61 },
+    { label: "SEP", i: 92 },
+  ];
+  return (
+    <svg
+      viewBox={`0 0 ${W} ${H}`}
+      className="h-auto w-full"
+      role="img"
+      aria-label="Reconstructed discharge hydrograph, June to September 2018, peaking at 17.11 on 16 August"
+      style={{ fontFamily: "var(--font-plex-mono), monospace" }}
+    >
+      <rect x={L + 68 * dw} y={T} width={10 * dw} height={ih} fill="#e8b44a" opacity="0.08" />
+      {months.map((m) => (
+        <g key={m.label}>
+          <line x1={L + m.i * dw} y1={T} x2={L + m.i * dw} y2={T + ih} stroke="#302b21" strokeWidth="1" />
+          <text x={L + m.i * dw + 6} y={H - 10} fontSize="8.5" fill="#a89f8c" letterSpacing="0.12em">
+            {m.label}
+          </text>
+        </g>
+      ))}
+      <line x1={L} y1={T + ih} x2={W - R} y2={T + ih} stroke="#3a3427" strokeWidth="1" />
+      <path d={path} fill="none" stroke="#38b2a9" strokeWidth="1.6" />
+      <circle cx={X(peakI)} cy={Y(17.11)} r="3.5" fill="#e8b44a" stroke="#12100c" strokeWidth="1.4" />
+      <text x={X(peakI) - 8} y={Y(17.11) - 8} textAnchor="end" fontSize="10" fontWeight="600" fill="#e8b44a">
+        17.11 · 16 AUG
+      </text>
+      <text x={L + 68 * dw + 4} y={T + 10} fontSize="8" fill="#e8b44a" letterSpacing="0.12em">
+        EVENT WINDOW · AUG 8–17
+      </text>
+    </svg>
+  );
+}
+
+/* ------------------------------- slide bodies ------------------------------- */
+
 const SLIDES: { id: string; body: React.ReactNode }[] = [
   {
-    id: "cover",
+    id: "question",
     body: (
       <div className="flex h-full flex-col justify-center">
-        <Eyebrow tone="paper">a research briefing · ten slides · {site.period}</Eyebrow>
-        <h1 className="mt-8 font-serif text-[40px] md:text-[68px] leading-[1.03] font-semibold tracking-tight text-paper">
-          Forecasting the floods of a land{" "}
-          <em className="italic font-normal text-water-bright">below the sea.</em>
+        <Eyebrow tone="paper">
+          slide 01 · research question · {site.period}
+        </Eyebrow>
+        <h1 className="mt-7 max-w-4xl font-serif text-[36px] leading-[1.06] font-semibold tracking-tight text-paper md:text-[58px]">
+          Can Kuttanad's floods be forecast far enough{" "}
+          <em className="italic font-normal text-water-bright">ahead to act?</em>
         </h1>
-        <p className="mt-8 font-mono text-[11px] uppercase tracking-[0.2em] text-paper-dim">
+        <p className="mt-6 max-w-2xl text-[15px] leading-7 text-paper-dim md:text-[16px]">
+          An LSTM early-warning study for the below-sea-level paddy lands of
+          Kuttanad, Alappuzha — where four rivers, a tide and 69.8% farmland
+          meet. The question is not whether floods happen; it is whether the
+          sequence of rain that precedes them can be read in time.
+        </p>
+        <div className="mt-7 flex flex-wrap gap-2">
+          <Tag className="border-water-bright/70 text-water-bright">complex hydrology</Tag>
+          <Tag className="border-night-line text-paper-dim">vulnerable land use</Tag>
+          <Tag className="border-night-line text-paper-dim">early-warning need</Tag>
+        </div>
+        <p className="mt-8 font-mono text-[10px] uppercase tracking-[0.18em] text-paper-dim/70">
           {site.brand} · {site.location} · {site.coords}
         </p>
-        <p className="mt-3 font-mono text-[10px] tracking-[0.08em] text-paper-dim/60">
-          navigate with arrow keys — or the controls below
-        </p>
       </div>
     ),
   },
   {
-    id: "region",
+    id: "landscape",
     body: (
-      <div className="grid gap-10 lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
+      <div className="grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
         <div>
-          <SlideTitle kicker="slide 02 · the region">
+          <SlideTitle kicker="slide 02 · the landscape">
             A basin of 1,171 km², elongated and tilted into the sea.
           </SlideTitle>
-          <p className="mt-6 max-w-xl text-[14px] leading-7 text-paper-dim">
-            Mean elevation 4.92 m; robust minimum −2.97 m. Four rivers — Pamba,
-            Manimala, Achankovil, Meenachil — drain into this bowl where 69.8%
-            of the land is farmland. The kayal fields are tilled below sea
-            level behind bunds, and every monsoon tests them.
+          <p className="mt-6 max-w-xl text-[14.5px] leading-7 text-paper-dim">
+            Four rivers — Pamba, Manimala, Achankovil, Meenachil — drain into
+            this bowl where 69.8% of the land is farmland. The kayal fields are
+            tilled below sea level behind earthen bunds, with pumped drainage
+            holding back both river and tide. Every monsoon tests the geometry.
+          </p>
+          <p className="mt-4 max-w-xl text-[13.5px] leading-6 text-paper-dim/80">
+            Sources — basin characteristics table (read in full); Bhuvan LULC 2015–16,
+            1:50K. Morphometry from the delineated SRTM-based basin model.
           </p>
         </div>
-        <StatGrid cols={2} items={[
-          ["1,171.18 km²", "basin area"],
-          ["−2.97 m", "min elevation"],
-          ["69.8%", "agriculture"],
-          ["0.615", "elongation ratio"],
-        ]} />
+        <div className="border border-night-line">
+          {[
+            ["BASIN AREA", "1,171.18 km²"],
+            ["MAINSTREAM LENGTH", "62.75 km"],
+            ["MEAN ELEVATION", "4.92 m"],
+            ["ROBUST MINIMUM", "−2.97 m — below sea level"],
+            ["ELONGATION RATIO", "0.615 — runoff concentrates"],
+            ["MAX STREAM ORDER", "4 · 287 sub-basins"],
+            ["AGRICULTURE SHARE", "69.8% of the basin"],
+            ["LOCAL RAIN GAUGES", "6 — NWIC stations"],
+          ].map(([k, v], i) => (
+            <div
+              key={k}
+              className={`grid grid-cols-[190px_1fr] gap-3 px-4 py-2.5 ${
+                i !== 7 ? "border-b border-night-line" : ""
+              }`}
+            >
+              <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-paper-dim">{k}</span>
+              <span className="font-mono text-[12px] tab-nums text-paper">{v}</span>
+            </div>
+          ))}
+        </div>
       </div>
     ),
   },
   {
-    id: "2018",
+    id: "event",
     body: (
       <div>
-        <SlideTitle kicker="slide 03 · august 2018">
+        <SlideTitle kicker="slide 03 · the reference event">
           1,398.9 mm of rain in one month. The flood that wrote the brief.
         </SlideTitle>
-        <div className="mt-8">
-          <StatGrid items={[
-            ["4,473 mm", "2018 state rainfall"],
-            ["126.4 mm", "daily peak — 15 aug"],
-            ["17.11", "discharge peak — 16 aug"],
-            ["43", "alappuzha fatalities"],
-          ]} />
+        <div className="mt-6 border border-night-line bg-night-2 p-4">
+          <EventSparkline />
+          <p className="mt-2 font-mono text-[9.5px] tracking-[0.04em] text-paper-dim/70">
+            reconstructed discharge hydrograph — peaks exact (17.11 file units, 16 Aug), daily shape illustrative
+          </p>
         </div>
-        <p className="mt-6 max-w-2xl text-[13.5px] leading-6 text-paper-dim">
-          In the Kuttanad event file the river rose from ≈5 to 17.11 in a
-          fortnight. District records: 2,126 relief camps and 2,075 damaged
-          houses in Alappuzha alone. Early warning here is not academic.
+        <div className="mt-5">
+          <StatGrid
+            items={[
+              ["4,473 mm", "2018 state rainfall"],
+              ["126.4 mm", "daily peak — 15 aug"],
+              ["17.11", "discharge peak — 16 aug"],
+              ["43", "alappuzha fatalities"],
+            ]}
+          />
+        </div>
+        <p className="mt-5 max-w-2xl text-[13.5px] leading-6 text-paper-dim">
+          The river rose from ≈5 to 17.11 in a fortnight. District records:
+          2,126 relief camps and 2,075 damaged houses in Alappuzha alone.
+          Early warning here is not academic.
         </p>
       </div>
     ),
   },
   {
-    id: "data",
+    id: "archive",
     body: (
       <div>
-        <SlideTitle kicker="slide 04 · the data foundation">
+        <SlideTitle kicker="slide 04 · the data archive">
           Everything the agencies measure, collected into one archive.
         </SlideTitle>
-        <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-7 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {[
             ["01 · flood history", "1901–2018 labels"],
             ["02 · river hydrology", "discharge 1950–2026"],
@@ -126,76 +228,115 @@ const SLIDES: { id: string; body: React.ReactNode }[] = [
             ["08 · literature", "10–500-yr return layers"],
           ].map(([t, d]) => (
             <div key={t} className="border border-night-line bg-night px-4 py-3.5">
-              <div className="font-mono text-[9.5px] font-semibold uppercase tracking-[0.1em] text-water-bright">{t}</div>
-              <div className="mt-1.5 font-mono text-[10px] text-paper-dim">{d}</div>
+              <div className="font-mono text-[9.5px] font-semibold uppercase tracking-[0.1em] text-water-bright">
+                {t}
+              </div>
+              <div className="mt-1.5 font-mono text-[10.5px] text-paper-dim">{d}</div>
             </div>
           ))}
         </div>
-        <p className="mt-6 font-mono text-[10px] tracking-[0.06em] text-paper-dim">
-          8 categories · 22 source folders · 1901–2026 span · CSV / XLS / GeoTIFF / GeoPackage
+        <p className="mt-6 text-[13px] leading-6 text-paper-dim">
+          8 categories · 22 source folders · 1901–2026 span · CSV / XLS / GeoTIFF /
+          GeoPackage · every file carries an audit state — read, preview, or catalogued.
         </p>
       </div>
     ),
   },
   {
-    id: "coverage",
+    id: "quality",
     body: (
       <div>
-        <SlideTitle kicker="slide 05 · coverage">
-          The record reaches back a century — in patches.
+        <SlideTitle kicker="slide 05 · data-quality findings">
+          Eleven defects, published in the open — grouped by impact.
         </SlideTitle>
-        <div className="mt-8 space-y-2">
-          {coverage.slice(0, 8).map((r) => (
-            <div key={r.label} className="grid grid-cols-[260px_1fr] items-center gap-4">
-              <span className="truncate font-mono text-[9.5px] text-paper-dim">{r.label}</span>
-              <div className="h-2 bg-night-2 border border-night-line">
-                <div
-                  className="h-full"
+        <div className="mt-7 grid gap-px border border-night-line bg-night-line sm:grid-cols-2">
+          {auditGroups.map((g) => {
+            const flags = auditFlags.filter((f) => f.impact === g.id);
+            return (
+              <div key={g.id} className="bg-night p-5">
+                <div className="flex items-baseline justify-between">
+                  <h3 className="font-serif text-[16px] font-semibold text-paper">{g.label}</h3>
+                  <span
+                    className={cn(
+                      "font-mono text-[11px] font-semibold tab-nums",
+                      g.id === "target" ? "text-[#d15a4c]" : "text-[#e8b44a]"
+                    )}
+                  >
+                    ×{flags.length}
+                  </span>
+                </div>
+                <p className="mt-2 text-[12.5px] leading-6 text-paper-dim">{g.blurb}</p>
+                <p className="mt-3 border-t border-night-line pt-2.5 font-mono text-[9.5px] leading-5 text-paper-dim/70">
+                  flags {flags.map((f) => f.no).join(" · ")} — full register in the data view
+                </p>
+              </div>
+            );
+          })}
+        </div>
+        <p className="mt-5 max-w-2xl text-[13.5px] leading-6 text-paper-dim">
+          An archive earns trust by publishing its defects. Every flag names the
+          dataset it affects and the corrective action required before that data
+          enters training.
+        </p>
+      </div>
+    ),
+  },
+  {
+    id: "features",
+    body: (
+      <div>
+        <SlideTitle kicker="slide 06 · feature engineering">
+          From agency archives to a sequence a network can read.
+        </SlideTitle>
+        <div className="mt-7 flex flex-wrap items-center gap-2">
+          {[
+            "temperature · rain · wind · radiation · ET₀",
+            "humidity · pressure · dew point",
+            "calendar — month, day-of-year",
+            "rainfall lags 1 / 3 / 7 d",
+            "rolling sums 3 / 7 / 30 d",
+          ].map((f) => (
+            <Tag key={f} className="border-night-line text-paper-dim">
+              {f}
+            </Tag>
+          ))}
+          <span className="font-mono text-[13px] text-water-bright">→</span>
+          <Tag className="border-water-bright bg-water-bright/10 text-water-bright">
+            one row per day — 21,915 rows
+          </Tag>
+        </div>
+        <div className="mt-6 border border-night-line bg-night-2 p-5">
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-3 font-mono text-[10.5px] text-paper-dim">
+            <span className="uppercase tracking-[0.16em] text-water-bright">the window —</span>
+            <span className="flex items-center gap-1.5">
+              {Array.from({ length: 30 }).map((_, k) => (
+                <span
+                  key={k}
+                  className="h-4 w-[7px] border"
                   style={{
-                    marginLeft: `${((r.from - 1900) / 130) * 100}%`,
-                    width: `${Math.max(((r.to - r.from) / 130) * 100, 1.2)}%`,
-                    backgroundColor: coverageColors[r.cat],
+                    background: k < 29 ? "#1b1812" : "#38b2a9",
+                    borderColor: k < 29 ? "#302b21" : "#38b2a9",
                   }}
                 />
-              </div>
-            </div>
-          ))}
-        </div>
-        <div className="mt-4 flex flex-wrap gap-3">
-          {coverageLegend.slice(0, 4).map((l) => (
-            <span key={l.cat} className="flex items-center gap-1.5 font-mono text-[8.5px] uppercase tracking-[0.1em] text-paper-dim">
-              <span className="size-2" style={{ backgroundColor: coverageColors[l.cat] }} />
-              {l.label}
+              ))}
             </span>
-          ))}
-          <span className="font-mono text-[8.5px] text-paper-dim/60">full timeline in the data inventory →</span>
+            <span>t−29 … t</span>
+            <span className="text-water-bright">→</span>
+            <span>
+              LSTM reads <span className="text-paper">30 days × 14 features</span>
+            </span>
+            <span className="text-water-bright">→</span>
+            <span>
+              target — <span className="text-[#e8b44a]">discharge t+1 … t+H</span>
+            </span>
+          </div>
+          <p className="mt-4 text-[12.5px] leading-6 text-paper-dim">
+            The open defect: the table carries no flood or discharge label yet,
+            and NASA POWER fields are empty for 1961–1980 (33.3% of rows).
+            Labelled targets must be joined before training can be reproduced
+            end to end.
+          </p>
         </div>
-      </div>
-    ),
-  },
-  {
-    id: "audit",
-    body: (
-      <div>
-        <SlideTitle kicker="slide 06 · the honest audit">
-          Eleven flags, published in the open.
-        </SlideTitle>
-        <div className="mt-8 grid gap-px border border-night-line bg-night-line sm:grid-cols-3">
-          {[
-            ["missing piece × 2", "no unified flood-labelled table yet; weather table lacks a target", "text-[#d15a4c] border-[#d15a4c]"],
-            ["caution × 5", "header-only 2026–30 files · Cauvery contamination · triple copies · terrain artifacts · undated KSEB snapshot", "text-[#e8b44a] border-[#e8b44a]"],
-            ["note × 4", "SAR slices must be summed · LULC overlaps >100% · district totals need citation · offshore weather point", "text-paper-dim border-paper-dim"],
-          ].map(([t, d, cls]) => (
-            <div key={t} className="bg-night p-5">
-              <span className={`font-mono text-[10px] font-semibold uppercase tracking-[0.14em] border-b pb-1 ${cls}`}>{t}</span>
-              <p className="mt-3 text-[12.5px] leading-6 text-paper-dim">{d}</p>
-            </div>
-          ))}
-        </div>
-        <p className="mt-6 max-w-2xl text-[13.5px] leading-6 text-paper-dim">
-          An archive earns trust by publishing its defects. Every flag carries
-          the action required before the affected data enters training.
-        </p>
       </div>
     ),
   },
@@ -204,98 +345,166 @@ const SLIDES: { id: string; body: React.ReactNode }[] = [
     body: (
       <div>
         <SlideTitle kicker="slide 07 · the model">
-          An LSTM, trained to read thirty days of weather.
+          A stacked LSTM reading thirty days of weather.
         </SlideTitle>
-        <div className="mt-8 flex flex-wrap items-center gap-2">
-          {["rain + lags 1/3/7 d", "rolling 3/7/30 d", "temp · wind · ET₀", "humidity · pressure", "antecedent discharge"]
-            .map((f) => (
-              <Tag key={f} className="border-night-line text-paper-dim">{f}</Tag>
-            ))}
-          <span className="font-mono text-[12px] text-water-bright">→</span>
-          <Tag className="border-water-bright bg-water-bright/10 text-water-bright">discharge trajectory</Tag>
-          <span className="font-mono text-[12px] text-water-bright">→</span>
-          <Tag className="border-[#e8b44a] text-[#e8b44a]">flood-risk class</Tag>
-        </div>
-        <div className="mt-8">
-          <StatGrid items={[
-            ["30 d", "input window"],
-            ["7–30 d", "forecast horizons"],
-            ["12.0", "flood threshold"],
-            ["v1.0", "trained · pending hookup"],
-          ]} />
-        </div>
-      </div>
-    ),
-  },
-  {
-    id: "console",
-    body: (
-      <div className="grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
-        <div>
-          <SlideTitle kicker="slide 08 · the console">
-            Reviewers don't read about the model. They run it.
-          </SlideTitle>
-          <p className="mt-6 max-w-xl text-[14px] leading-7 text-paper-dim">
-            The Model Lab ships a working inference console: choose a rainfall
-            scenario, scale intensity, pick a horizon — and read the predicted
-            discharge against flood and severe thresholds. It runs a
-            deterministic profile today, and switches to live weights through
-            one config line the day the checkpoint is cleared.
-          </p>
-        </div>
-        <div className="border border-night-line bg-night-2 p-5 font-mono text-[10.5px] leading-7 text-paper-dim">
-          <div className="text-water-bright">console — session recipe</div>
-          <div>01 · scenario — 2018-like event</div>
-          <div>02 · intensity — ×1.0 (the audited event)</div>
-          <div>03 · horizon — 30 days</div>
-          <div className="text-[#e8b44a]">04 · read — peak 17.11 on D+16</div>
-          <div className="text-[#e8b44a]">05 · class — severe · 7 d above stage</div>
-          <div className="mt-2 text-paper-dim/60">the demo reproduces the recorded 2018 peak exactly</div>
-        </div>
-      </div>
-    ),
-  },
-  {
-    id: "status",
-    body: (
-      <div>
-        <SlideTitle kicker="slide 09 · status">
-          Four phases done. One in flight. The frontier is visible.
-        </SlideTitle>
-        <div className="mt-8 space-y-2.5">
-          {phases.map((p) => (
-            <div key={p.no} className="flex items-center gap-4 border-b border-night-line pb-2.5">
-              <span className="font-mono text-[10px] text-paper-dim/70 w-8">{p.no}</span>
-              <span className="w-40 font-mono text-[11px] font-medium text-paper">{p.title}</span>
-              <span className="flex-1 hidden md:block font-mono text-[9.5px] text-paper-dim truncate">{p.summary}</span>
-              <span
+        <div className="mt-7 flex flex-wrap items-stretch gap-2">
+          {[
+            { t: "input window", s: "30 d × 14 features", tone: "outline" },
+            { t: "lstm layer 1", s: "128 units · return sequences", tone: "water" },
+            { t: "lstm layer 2", s: "64 units · last state", tone: "water" },
+            { t: "dense head", s: "relu 32 → linear", tone: "outline" },
+            { t: "threshold step", s: "flood ≥ 12 · severe ≥ 15", tone: "amber" },
+          ].map((b, i) => (
+            <div key={b.t} className="flex items-center gap-2">
+              <div
                 className={cn(
-                  "font-mono text-[9px] uppercase tracking-[0.14em] px-2 py-0.5 border",
-                  p.status === "complete" && "border-water-bright text-water-bright",
-                  p.status === "active" && "border-[#e8b44a] text-[#e8b44a]",
-                  p.status === "next" && "border-paper text-paper",
-                  p.status === "planned" && "border-paper-dim text-paper-dim"
+                  "border px-3.5 py-3",
+                  b.tone === "water" && "border-water-bright bg-water-bright/10",
+                  b.tone === "outline" && "border-night-line bg-night",
+                  b.tone === "amber" && "border-dashed border-[#e8b44a]"
                 )}
               >
-                {p.status === "active" ? "in progress" : p.status}
-              </span>
+                <div
+                  className={cn(
+                    "font-mono text-[9.5px] font-semibold uppercase tracking-[0.12em]",
+                    b.tone === "water" ? "text-water-bright" : b.tone === "amber" ? "text-[#e8b44a]" : "text-paper"
+                  )}
+                >
+                  {b.t}
+                </div>
+                <div className="mt-1 font-mono text-[10px] text-paper-dim">{b.s}</div>
+              </div>
+              {i < 4 && <span className="font-mono text-[12px] text-water-bright">→</span>}
             </div>
           ))}
         </div>
+        <div className="mt-6">
+          <StatGrid
+            items={[
+              [modelConfig.inputWindow, "input window"],
+              [modelConfig.horizons.map((h) => `${h}`).join(" · ") + " d", "forecast horizons"],
+              [String(modelConfig.floodThreshold), "flood threshold"],
+              ["v1.0", "trained · pending hookup"],
+            ]}
+          />
+        </div>
+        <p className="mt-5 max-w-2xl text-[13px] leading-6 text-paper-dim">
+          The model predicts river discharge — not flood depth and not
+          probability. The warning class is a separate threshold step drawn
+          dashed here because it runs after the network, not inside it.
+        </p>
       </div>
     ),
   },
   {
-    id: "close",
+    id: "implementation",
+    body: (
+      <div>
+        <SlideTitle kicker="slide 08 · the current implementation">
+          Reviewers don't read about the model. They run it.
+        </SlideTitle>
+        <div className="mt-7 grid gap-5 lg:grid-cols-[1.1fr_0.9fr]">
+          <div className="space-y-3">
+            {[
+              ["inference console", "built — deterministic DEMO profile running now", "#e8b44a"],
+              ["python service hookup", "documented — contract + FastAPI example ready", "text-paper-dim"],
+              ["onnx in-browser", "proposal — needs an ONNX export of the checkpoint", "text-paper-dim"],
+              ["live weights", "pending release clearance — one config line to switch", "text-paper-dim"],
+            ].map(([k, v, tone]) => (
+              <div key={k} className="flex items-start gap-3 border border-night-line bg-night px-4 py-3">
+                <span className="mt-1 size-1.5 shrink-0" style={{ backgroundColor: tone }} />
+                <div>
+                  <span className="font-mono text-[10.5px] font-semibold uppercase tracking-[0.12em] text-paper">
+                    {k}
+                  </span>
+                  <span className="mt-0.5 block text-[12.5px] leading-6 text-paper-dim">{v}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="border border-night-line bg-night-2 p-5 font-mono text-[10.5px] leading-7 text-paper-dim">
+            <div className="text-water-bright">console — session recipe</div>
+            <div>01 · scenario — 2018-like event</div>
+            <div>02 · intensity — ×1.0 (the audited event)</div>
+            <div>03 · horizon — 30 days</div>
+            <div className="text-[#e8b44a]">04 · read — peak 17.11 on D+16</div>
+            <div className="text-[#e8b44a]">05 · class — severe · 7 d above stage</div>
+            <div className="mt-2 text-paper-dim/60">
+              the demo reproduces the recorded 2018 peak exactly — and says so
+              on every run
+            </div>
+          </div>
+        </div>
+      </div>
+    ),
+  },
+  {
+    id: "validation",
+    body: (
+      <div>
+        <SlideTitle kicker="slide 09 · the validation gap">
+          What evidence is still required before any skill is claimed.
+        </SlideTitle>
+        <div className="mt-7 grid gap-px border border-night-line bg-night-line sm:grid-cols-2">
+          {[
+            [
+              "unified labelled table",
+              "no merged daily table with a Kuttanad flood target exists yet — labels must come from discharge thresholds, IndoFloods events, or summed SAR extent",
+            ],
+            [
+              "2018 backtest",
+              "the reference event is held out for validation; the console's reproduction of its peak is a calibration, not a forecast skill test",
+            ],
+            [
+              "return-period benchmark",
+              "10–500-yr exceedance rasters (± climate change) provide the independent benchmark for LSTM exceedance estimates",
+            ],
+            [
+              "published metrics",
+              "NSE, MAE and peak error stay blank on the model card until the live weights are connected — no performance claims are made in this dossier",
+            ],
+          ].map(([k, v]) => (
+            <div key={k} className="bg-night p-5">
+              <div className="flex items-center justify-between gap-3">
+                <span className="font-mono text-[10.5px] font-semibold uppercase tracking-[0.1em] text-paper">
+                  {k}
+                </span>
+                <span className="font-mono text-[9px] uppercase tracking-[0.12em] border border-[#e8b44a]/70 px-1.5 py-0.5 text-[#e8b44a]">
+                  pending
+                </span>
+              </div>
+              <p className="mt-2.5 text-[12.5px] leading-6 text-paper-dim">{v}</p>
+            </div>
+          ))}
+        </div>
+        <p className="mt-5 max-w-2xl text-[13.5px] leading-6 text-paper-dim">
+          Until these four close, the honest summary is: a trained model exists,
+          a working integration exists, and no validated predictive skill has
+          been demonstrated. That is the gap the next phase is designed to close.
+        </p>
+      </div>
+    ),
+  },
+  {
+    id: "next",
     body: (
       <div className="flex h-full flex-col justify-center">
-        <Eyebrow tone="paper">slide 10 · next</Eyebrow>
-        <h2 className="mt-6 font-serif text-[32px] md:text-[48px] leading-[1.1] font-semibold tracking-tight text-paper max-w-3xl">
+        <Eyebrow tone="paper">slide 10 · next steps</Eyebrow>
+        <h2 className="mt-6 max-w-3xl font-serif text-[30px] leading-[1.1] font-semibold tracking-tight text-paper md:text-[44px]">
           Next: one labelled table, connected weights, a validated forecast.
         </h2>
-        <div className="mt-8 flex flex-wrap gap-2">
-          {["unified flood labels", "NASA 1961–80 gap fill", "live LSTM hookup", "2018 backtest", "10–500-yr benchmark", "real-time feed"].map((s) => (
-            <Tag key={s} className="border-night-line text-paper-dim">{s}</Tag>
+        <div className="mt-7 max-w-3xl space-y-2.5">
+          {[
+            ["01", "decide the flood-label derivation — thresholds, IndoFloods, or SAR-paired"],
+            ["02", "connect the weights — set the inference endpoint; DEMO becomes LIVE"],
+            ["03", "fill the NASA POWER 1961–1980 void in the weather table"],
+            ["04", "backtest on 2018 and benchmark against the return-period rasters"],
+            ["05", "publish NSE, MAE and peak error on the model card — then judge the model"],
+          ].map(([n, t]) => (
+            <div key={n} className="flex items-baseline gap-4 border-b border-night-line pb-2.5">
+              <span className="font-mono text-[10.5px] font-semibold text-water-bright">{n}</span>
+              <span className="text-[13.5px] leading-6 text-paper-dim">{t}</span>
+            </div>
           ))}
         </div>
         <p className="mt-10 font-mono text-[9px] uppercase tracking-[0.16em] text-paper-dim">
@@ -322,17 +531,37 @@ export function BriefingView({ navigate }: { navigate: (v: ViewKey) => void }) {
 
   useEffect(() => {
     const h = (e: KeyboardEvent) => {
-      if (e.key === "ArrowRight" || e.key === " ") go(1);
+      const t = e.target as HTMLElement | null;
+      if (
+        t &&
+        (t.tagName === "INPUT" ||
+          t.tagName === "TEXTAREA" ||
+          t.tagName === "SELECT" ||
+          t.isContentEditable)
+      )
+        return;
+      if (e.key === "ArrowRight" || (e.key === " " && t?.tagName !== "BUTTON")) {
+        if (e.key === " ") e.preventDefault();
+        go(1);
+      }
       if (e.key === "ArrowLeft") go(-1);
+      if (e.key === "Home") {
+        e.preventDefault();
+        setIdx(0);
+      }
+      if (e.key === "End") {
+        e.preventDefault();
+        setIdx(total - 1);
+      }
     };
     window.addEventListener("keydown", h);
     return () => window.removeEventListener("keydown", h);
-  }, [go]);
+  }, [go, total]);
 
   return (
     <div className="grid-night flex flex-col bg-night text-paper">
       {/* progress rule */}
-      <div className="h-[3px] w-full bg-night-line">
+      <div className="h-[3px] w-full bg-night-line" aria-hidden>
         <div
           className="h-full bg-water-bright transition-all duration-300"
           style={{ width: `${((idx + 1) / total) * 100}%` }}
@@ -357,32 +586,48 @@ export function BriefingView({ navigate }: { navigate: (v: ViewKey) => void }) {
         </div>
 
         {/* controls */}
-        <div className="flex items-center justify-between border-t border-night-line py-4">
+        <div className="flex flex-wrap items-center justify-between gap-y-3 border-t border-night-line py-4">
           <button
             onClick={() => (idx === 0 ? navigate("overview") : go(-1))}
             className="inline-flex min-h-[44px] items-center gap-2 border border-night-line px-4 py-2.5 font-mono text-[10px] uppercase tracking-[0.16em] text-paper-dim transition-colors hover:border-paper-dim hover:text-paper"
-            aria-label="Previous slide"
+            aria-label={idx === 0 ? "Back to dossier" : "Previous slide"}
           >
             <ChevronLeft className="size-4" />
             {idx === 0 ? "back to dossier" : "prev"}
           </button>
-          <div className="flex items-center gap-1.5">
+          <div className="hidden items-center gap-1.5 sm:flex">
             {SLIDES.map((s, i) => (
               <button
                 key={s.id}
                 onClick={() => setIdx(i)}
                 aria-label={`Go to slide ${i + 1}`}
+                aria-current={i === idx ? "true" : undefined}
                 className={cn(
                   "h-1.5 w-1.5 transition-colors",
-                  i === idx ? "bg-water-bright" : i < idx ? "bg-paper-dim/60" : "bg-night-line hover:bg-paper-dim/40"
+                  i === idx
+                    ? "bg-water-bright"
+                    : i < idx
+                      ? "bg-paper-dim/60"
+                      : "bg-night-line hover:bg-paper-dim/40"
                 )}
               />
             ))}
           </div>
           <div className="flex items-center gap-4">
-            <span className="font-mono text-[10px] tab-nums tracking-[0.2em] text-paper-dim">
+            <span
+              className="font-mono text-[11px] tab-nums tracking-[0.2em] text-paper-dim"
+              aria-live="polite"
+            >
               {String(idx + 1).padStart(2, "0")} / {total}
             </span>
+            <button
+              onClick={() => navigate("overview")}
+              className="inline-flex min-h-[44px] items-center gap-2 border border-night-line px-3 py-2.5 font-mono text-[10px] uppercase tracking-[0.16em] text-paper-dim transition-colors hover:border-severe hover:text-severe"
+              aria-label="Exit briefing, return to dossier"
+            >
+              <X className="size-4" />
+              <span className="hidden sm:inline">exit</span>
+            </button>
             <button
               onClick={() => go(1)}
               disabled={idx === total - 1}

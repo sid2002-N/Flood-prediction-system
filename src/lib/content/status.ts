@@ -3,7 +3,7 @@
  * Phases, open questions and next steps, as the work actually stands.
  */
 
-export type PhaseStatus = "complete" | "active" | "next" | "planned";
+export type PhaseStatus = "complete" | "active" | "blocked" | "next" | "planned";
 
 export interface Phase {
   no: string;
@@ -12,6 +12,9 @@ export interface Phase {
   when: string;
   summary: string;
   points: string[];
+  evidence?: string;
+  blocks?: string;
+  depends?: string;
 }
 
 export const phases: Phase[] = [
@@ -27,6 +30,7 @@ export const phases: Phase[] = [
       "Records spanning 1901–2026: rainfall, discharge, water level, SAR, terrain, land use, reservoirs.",
       "Reference collection: peer-reviewed papers, official reports and return-probability rasters.",
     ],
+    evidence: "40+ datasets catalogued with coverage and audit state — see the data inventory",
   },
   {
     no: "02",
@@ -40,6 +44,7 @@ export const phases: Phase[] = [
       "Cleaning pipeline with raw / manual-cleaned / cleaned stages tracked in file names.",
       "11 data-quality flags documented, from Cauvery contamination to header-only files.",
     ],
+    evidence: "the audit register — every flag filed with an action",
   },
   {
     no: "03",
@@ -52,6 +57,7 @@ export const phases: Phase[] = [
       "Rainfall lags (1/3/7 days) and rolling sums (3/7/30 days) computed per calendar features.",
       "500 m terrain grid with land-use percentages joined per cell.",
     ],
+    evidence: "21,915-row ML-ready table — lags and rolling sums per row",
   },
   {
     no: "04",
@@ -60,10 +66,11 @@ export const phases: Phase[] = [
     when: "phase iii",
     summary: "The model is trained — version 1.0 of the flood forecaster exists.",
     points: [
-      "LSTM v1.0 trained on the collected sequences.",
-      "Awaiting integration: the trained weights are not yet wired into this site's inference console.",
-      "Metrics to be published on the model card once the weights are connected.",
+      "Kuttanad-LSTM v1.0 trained on the collected sequences.",
+      "Checkpoint retained pending release clearance for hookup into this site.",
+      "Performance metrics reserved until the live weights are connected — no claims published.",
     ],
+    evidence: "model card and architecture spec — model lab",
   },
   {
     no: "05",
@@ -73,10 +80,12 @@ export const phases: Phase[] = [
     summary:
       "This website: the forecasting console, the model card and the reviewer-facing presentation.",
     points: [
-      "Inference console built with a pluggable adapter — demo weights running now.",
+      "Inference console built with a pluggable adapter — deterministic demo profile running now.",
       "Integration points documented for a Python inference service or an ONNX build.",
       "Replace demo outputs with live LSTM predictions once weights are cleared for release.",
     ],
+    evidence: "the console runs end-to-end today — model lab",
+    blocks: "live validation — every console output stays DEMO until the weights connect",
   },
   {
     no: "06",
@@ -90,6 +99,8 @@ export const phases: Phase[] = [
       "Fill or impute the 1961–1980 NASA POWER void in the weather table.",
       "Prune Cauvery-basin files and header-only years from the training pool.",
     ],
+    depends: "phase 05 hookup + the label-derivation decision (open question 03)",
+    blocks: "every validation metric — no labels, no backtest",
   },
   {
     no: "07",
@@ -102,6 +113,8 @@ export const phases: Phase[] = [
       "Benchmark LSTM exceedance estimates against 10–500-year return periods.",
       "Move toward scheduled retraining and a live forecasting feed.",
     ],
+    depends: "phases 05 + 06 — connected weights and labelled data",
+    blocks: "operational use — the system cannot support real warnings until validated",
   },
 ];
 

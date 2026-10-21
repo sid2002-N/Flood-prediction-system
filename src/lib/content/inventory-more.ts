@@ -224,19 +224,51 @@ export const categoriesB: Category[] = [
 /* ------------------------- data audit flags ------------------------- */
 
 export type FlagSeverity = "gap" | "caution" | "note";
+export type FlagImpact = "target" | "spatial" | "integrity" | "hygiene";
+export type FlagStatus = "open" | "mitigated";
 
 export interface AuditFlag {
   no: string;
   severity: FlagSeverity;
+  impact: FlagImpact;
+  status: FlagStatus;
+  affects: string;
   title: string;
   detail: string;
   action: string;
 }
 
+/** Impact groups — what each defect class does to model development. */
+export const auditGroups: { id: FlagImpact; label: string; blurb: string }[] = [
+  {
+    id: "target",
+    label: "Target & labels",
+    blurb: "Blocks the unified training table — the model cannot be trained or validated until a flood target is defined.",
+  },
+  {
+    id: "spatial",
+    label: "Spatial integrity",
+    blurb: "Records that belong to the wrong basin or the wrong place — pruning errors that would silently poison basin-specific results.",
+  },
+  {
+    id: "integrity",
+    label: "Units, artifacts & provenance",
+    blurb: "Values that cannot be trusted at face value: mixed units, processing artifacts, undated snapshots and uncited totals.",
+  },
+  {
+    id: "hygiene",
+    label: "Archive hygiene",
+    blurb: "Duplicates, empty files and overlapping classes — not wrong, but they inflate and confuse the archive until handled by convention.",
+  },
+];
+
 export const auditFlags: AuditFlag[] = [
   {
     no: "01",
     severity: "gap",
+    impact: "target",
+    status: "open",
+    affects: "all inputs → the unified training pool",
     title: "No unified labelled training table yet",
     detail:
       "Weather, discharge, water level, SAR and terrain all exist as separate, strong inputs — but no single merged daily table with a Kuttanad flood target has been assembled.",
@@ -246,62 +278,63 @@ export const auditFlags: AuditFlag[] = [
   {
     no: "02",
     severity: "gap",
+    impact: "target",
+    status: "open",
+    affects: "kuttanad_NW3_weather_ML_ready_1961_2020.csv",
     title: "Weather table has no target label",
     detail:
       "The ML-ready weather table carries no flood or discharge column, and its NASA POWER fields are empty for 1961–1980 — 33.3% missing overall.",
     action: "Fill the NASA void by re-export or imputation, then join the target series.",
   },
   {
-    no: "03",
-    severity: "caution",
-    title: "Header-only 2026–2030 files",
-    detail:
-      "Kerala-wide files for 2026–2030 are only 230–290 bytes — effectively header-only. The CWC 2026 files, by contrast, do contain data.",
-    action: "Exclude the empty years; retain CWC 2026.",
-  },
-  {
-    no: "04",
-    severity: "caution",
-    title: "Cauvery-basin contamination",
-    detail:
-      "Many water-level files in the archive belong to the Cauvery basin, not to Kuttanad's west-flowing rivers.",
-    action: "Filter by station metadata before any basin-specific analysis.",
-  },
-  {
-    no: "05",
-    severity: "caution",
-    title: "Triple copies inflate the archive",
-    detail:
-      "Most series exist as raw, manual-cleaned and cleaned copies; the Google Sheet version (3.9 MB) is a partial export of a much larger CSV (35.8 MB).",
-    action: "Train from the cleaned CSV; treat the Sheet as a view, not a source.",
-  },
-  {
-    no: "06",
-    severity: "caution",
-    title: "Terrain artifacts",
-    detail:
-      "Slope values near 90° in a basin averaging 4.9 m elevation, a TWI nodata value of −3.4×10³⁸, and a drainage density (9.89) derived from inconsistent stream-length totals (11,586 km vs ≈4,348 km).",
-    action: "Re-derive slope from the depressionless DEM; mask nodata; recompute drainage density.",
-  },
-  {
     no: "07",
     severity: "note",
+    impact: "target",
+    status: "open",
+    affects: "SAR water-extent series (Sentinel-1)",
     title: "SAR slices must be summed",
     detail:
       "Many dates carry two rows — two image slices of one pass. After summing, typical extent is ≈55k ha, but 2018 flood days reach only ≈62k ha against 55–60k on ordinary monsoon dates.",
     action: "Sum slices on export; treat extent as a weak label on its own.",
   },
   {
-    no: "08",
-    severity: "note",
-    title: "Land-use classes overlap",
+    no: "04",
+    severity: "caution",
+    impact: "spatial",
+    status: "open",
+    affects: "hourly water-level series",
+    title: "Cauvery-basin contamination",
     detail:
-      "Water bodies are also counted inside wetlands and urban inside built-up, so shares total over 100%.",
-    action: "Never show LULC as a single pie; use per-class bars with this footnote.",
+      "Many water-level files in the archive belong to the Cauvery basin, not to Kuttanad's west-flowing rivers.",
+    action: "Filter by station metadata before any basin-specific analysis.",
+  },
+  {
+    no: "11",
+    severity: "note",
+    impact: "spatial",
+    status: "open",
+    affects: "Open-Meteo second-point export",
+    title: "Offshore Open-Meteo point",
+    detail: "One Open-Meteo export uses (9.03°N, 75.99°E), which falls offshore of the coast.",
+    action: "Verify the point or re-export from a land coordinate.",
+  },
+  {
+    no: "06",
+    severity: "caution",
+    impact: "integrity",
+    status: "open",
+    affects: "derived terrain layers (slope · TWI · drainage density)",
+    title: "Terrain artifacts",
+    detail:
+      "Slope values near 90° in a basin averaging 4.9 m elevation, a TWI nodata value of −3.4×10³⁸, and a drainage density (9.89) derived from inconsistent stream-length totals (11,586 km vs ≈4,348 km).",
+    action: "Re-derive slope from the depressionless DEM; mask nodata; recompute drainage density.",
   },
   {
     no: "09",
     severity: "caution",
+    impact: "integrity",
+    status: "open",
+    affects: "KSEB 16-dam reservoir snapshot",
     title: "KSEB snapshot lacks a date and mixes units",
     detail:
       "The 16-dam KSEB table has no capture date and mixes feet and metres across columns.",
@@ -310,16 +343,45 @@ export const auditFlags: AuditFlag[] = [
   {
     no: "10",
     severity: "note",
+    impact: "integrity",
+    status: "open",
+    affects: "district-wise 2018 impact table",
     title: "District impact table needs its source cited",
     detail:
       "The file does not state the period its rainfall columns cover, and district fatalities sum to 339.",
     action: "Cite the official source before publishing any district totals.",
   },
   {
-    no: "11",
+    no: "03",
+    severity: "caution",
+    impact: "hygiene",
+    status: "open",
+    affects: "Kerala-wide 2026–2030 files",
+    title: "Header-only 2026–2030 files",
+    detail:
+      "Kerala-wide files for 2026–2030 are only 230–290 bytes — effectively header-only. The CWC 2026 files, by contrast, do contain data.",
+    action: "Exclude the empty years; retain CWC 2026.",
+  },
+  {
+    no: "05",
+    severity: "caution",
+    impact: "hygiene",
+    status: "open",
+    affects: "most gauge series (raw / manual-cleaned / cleaned)",
+    title: "Triple copies inflate the archive",
+    detail:
+      "Most series exist as raw, manual-cleaned and cleaned copies; the Google Sheet version (3.9 MB) is a partial export of a much larger CSV (35.8 MB).",
+    action: "Train from the cleaned CSV; treat the Sheet as a view, not a source.",
+  },
+  {
+    no: "08",
     severity: "note",
-    title: "Offshore Open-Meteo point",
-    detail: "One Open-Meteo export uses (9.03°N, 75.99°E), which falls offshore of the coast.",
-    action: "Verify the point or re-export from a land coordinate.",
+    impact: "hygiene",
+    status: "mitigated",
+    affects: "Bhuvan LULC 2015–16 class areas",
+    title: "Land-use classes overlap",
+    detail:
+      "Water bodies are also counted inside wetlands and urban inside built-up, so shares total over 100%.",
+    action: "Never show LULC as a single pie; use per-class bars with this footnote.",
   },
 ];

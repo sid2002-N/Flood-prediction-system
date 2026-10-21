@@ -2,43 +2,87 @@
 
 /**
  * Kuttanad Flood Prediction System — Status view.
- * Phase ledger, open questions, and the deliverable register.
+ * Position strip, phase ledger with evidence and blocking
+ * dependencies, the open-questions register, and deliverables.
  */
-import { SectionHeading, Eyebrow, StatusPill } from "@/components/research/furniture";
+import { SectionHeading, Eyebrow, Stat, StatusPill } from "@/components/research/furniture";
 import { phases, openQuestions } from "@/lib/content/status";
 import type { ViewKey } from "@/components/site-shell";
-import { ArrowRight, CircleHelp } from "lucide-react";
+import { ArrowRight, CircleHelp, FileCheck2 } from "lucide-react";
 
-const REGISTER = [
-  ["collected archive", "8 categories · 22 folders · 1901–2026 · 40+ datasets"],
-  ["audit ledger", "11 flags filed — every defect documented with an action"],
-  ["ML-ready weather table", "21,915 daily rows · lags · rolling sums · 1961–2020"],
-  ["trained model", "Kuttanad-LSTM v1.0 — awaiting weights hookup"],
-  ["this dossier", "inventory · event analysis · console · briefing — live"],
+const REGISTER: { k: string; v: string; view?: ViewKey }[] = [
+  {
+    k: "collected archive",
+    v: "8 categories · 22 folders · 1901–2026 · 40+ datasets",
+    view: "data",
+  },
+  {
+    k: "audit ledger",
+    v: "11 flags filed — every defect documented with an action",
+    view: "data",
+  },
+  {
+    k: "ML-ready weather table",
+    v: "21,915 daily rows · lags · rolling sums · 1961–2020",
+    view: "data",
+  },
+  {
+    k: "trained model",
+    v: "Kuttanad-LSTM v1.0 — awaiting weights hookup",
+    view: "model",
+  },
+  {
+    k: "this dossier",
+    v: "inventory · event analysis · console · briefing — live",
+    view: "overview",
+  },
+  {
+    k: "research briefing",
+    v: "10 slides — keyboard-navigable, embedded in the site",
+    view: "briefing",
+  },
 ];
 
 export function StatusView({ navigate }: { navigate: (v: ViewKey) => void }) {
   return (
     <div className="mx-auto max-w-6xl px-5 md:px-8 py-14 md:py-20">
-      <div className="mb-12">
+      {/* ------------------------------ 12 — header ------------------------------ */}
+      <div className="mb-10">
         <div className="flex items-baseline gap-3 border-t border-paper-line pt-3">
-          <span className="font-mono text-[11px] font-semibold text-water">11</span>
+          <span className="font-mono text-[11px] font-semibold text-water">12</span>
           <Eyebrow>project status — where the work stands</Eyebrow>
         </div>
         <h1 className="mt-5 font-serif text-4xl md:text-[52px] leading-[1.05] font-semibold tracking-tight">
           The Ledger
         </h1>
-        <p className="mt-5 max-w-3xl text-[15px] leading-7 text-ink-soft">
-          A project tells the truth in its phase book. Four phases are
-          complete, integration is in progress, and the path to a labelled
-          training table — the one artifact the model still needs — is fully
-          specified. Below: the phase ledger, the questions still open, and
-          the register of what already exists.
+        <p className="mt-5 max-w-3xl text-[16px] leading-8 text-ink-soft">
+          A project tells the truth in its phase book. Four phases are complete,
+          integration is in progress, and the path to a labelled training table
+          — the one artifact the model still needs — is fully specified. Below:
+          the position at a glance, the phase ledger with evidence and blocking
+          dependencies, the decisions still open, and the register of what
+          already exists.
         </p>
       </div>
 
+      {/* position strip */}
+      <div className="mb-14 grid grid-cols-2 gap-px border border-paper-line bg-paper-line sm:grid-cols-3 lg:grid-cols-6">
+        {[
+          { value: "4 / 7", label: "phases complete", note: "collection → training" },
+          { value: "1", label: "phase active", note: "integration — this site" },
+          { value: "21,915", label: "daily rows ML-ready", note: "1961–2020" },
+          { value: "1901–2026", label: "archive span", note: "118 years of record" },
+          { value: "v1.0", label: "LSTM trained", note: "weights pending hookup" },
+          { value: "5", label: "open decisions", note: "each one named below" },
+        ].map((s) => (
+          <div key={s.label} className="bg-paper">
+            <Stat value={s.value} label={s.label} note={s.note} />
+          </div>
+        ))}
+      </div>
+
       {/* phase ledger */}
-      <ol className="relative border-l border-paper-line ml-2 space-y-10">
+      <ol className="relative ml-2 space-y-12 border-l border-paper-line">
         {phases.map((p) => (
           <li key={p.no} className="relative pl-8">
             <span
@@ -47,41 +91,69 @@ export function StatusView({ navigate }: { navigate: (v: ViewKey) => void }) {
                   ? "bg-water border-water"
                   : p.status === "active"
                     ? "bg-flood border-flood animate-pulse"
-                    : p.status === "next"
-                      ? "bg-paper border-ink-soft"
-                      : "bg-paper border-paper-line"
+                    : p.status === "blocked"
+                      ? "bg-severe border-severe"
+                      : p.status === "next"
+                        ? "bg-paper border-ink-soft"
+                        : "bg-paper border-paper-line"
               }`}
             />
             <div className="flex flex-wrap items-center gap-3">
               <span className="font-mono text-[10px] font-semibold tracking-[0.16em] text-ink-soft">
                 PHASE {p.no}
               </span>
-              <StatusPill state={p.status === "active" ? "active" : p.status} />
+              <StatusPill state={p.status} />
               <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-paper-dim">
                 {p.when}
               </span>
             </div>
             <h2 className="mt-2 font-serif text-[22px] font-semibold text-ink">{p.title}</h2>
-            <p className="mt-1.5 max-w-2xl text-[14px] leading-6 text-ink-soft">{p.summary}</p>
+            <p className="mt-1.5 max-w-2xl text-[14.5px] leading-7 text-ink-soft">{p.summary}</p>
             <ul className="mt-3 max-w-2xl space-y-2">
               {p.points.map((pt) => (
-                <li key={pt} className="flex gap-3 text-[13px] leading-6 text-ink-soft">
+                <li key={pt} className="flex gap-3 text-[13.5px] leading-6 text-ink-soft">
                   <span className="mt-[10px] h-px w-3.5 shrink-0 bg-paper-dim" />
                   {pt}
                 </li>
               ))}
             </ul>
+            <div className="mt-3 flex max-w-2xl flex-col gap-1.5">
+              {p.evidence && (
+                <p className="flex gap-2 text-[12.5px] leading-6">
+                  <span className="font-mono text-[9.5px] uppercase tracking-[0.14em] text-water shrink-0 pt-0.5">
+                    evidence ·
+                  </span>
+                  <span className="text-ink-soft">{p.evidence}</span>
+                </p>
+              )}
+              {p.depends && (
+                <p className="flex gap-2 text-[12.5px] leading-6">
+                  <span className="font-mono text-[9.5px] uppercase tracking-[0.14em] text-ink-soft shrink-0 pt-0.5">
+                    depends on ·
+                  </span>
+                  <span className="text-ink-soft">{p.depends}</span>
+                </p>
+              )}
+              {p.blocks && (
+                <p className="flex gap-2 text-[12.5px] leading-6">
+                  <span className="font-mono text-[9.5px] uppercase tracking-[0.14em] text-flood-deep shrink-0 pt-0.5">
+                    blocks ·
+                  </span>
+                  <span className="text-flood-deep">{p.blocks}</span>
+                </p>
+              )}
+            </div>
           </li>
         ))}
       </ol>
 
-      {/* open questions */}
-      <div className="mt-16">
+      {/* ------------------------------ 13 — open questions ------------------------------ */}
+      <div className="mt-20">
         <SectionHeading
-          no="12"
+          no="13"
           kicker="open questions"
           title="What we still have to decide."
-          lede="Every open question is a decision with a named owner: the data side. Each one blocks or shapes the unified training table — none of them is a surprise."
+          lede="Every open question is a decision that materially affects the validity of the forecast — the prediction target, the units, the labels, the completeness of the weather record, and the reliability of event labels. None of them is a surprise; each has a named resolution path."
         />
         <div className="border border-paper-line bg-card divide-y divide-paper-line">
           {openQuestions.map((o) => (
@@ -92,31 +164,43 @@ export function StatusView({ navigate }: { navigate: (v: ViewKey) => void }) {
                   {o.q}
                 </h3>
               </div>
-              <p className="text-[13.5px] leading-6 text-ink-soft">{o.a}</p>
+              <p className="text-[14px] leading-7 text-ink-soft">{o.a}</p>
             </div>
           ))}
         </div>
       </div>
 
-      {/* deliverable register */}
-      <div className="mt-16">
+      {/* ------------------------------ 14 — deliverables ------------------------------ */}
+      <div className="mt-20">
         <SectionHeading
-          no="13"
+          no="14"
           kicker="deliverable register"
           title="What already exists."
+          lede="Every artifact this project has produced, linked to where it can be inspected. Nothing is listed that cannot be opened and reviewed."
         />
         <dl className="border border-paper-line bg-card">
-          {REGISTER.map(([k, v], i) => (
+          {REGISTER.map((r, i) => (
             <div
-              key={k}
-              className={`grid gap-3 px-5 py-4 md:grid-cols-[240px_1fr] ${
+              key={r.k}
+              className={`grid items-center gap-3 px-5 py-4 md:grid-cols-[240px_1fr_44px] ${
                 i !== REGISTER.length - 1 ? "border-b border-paper-line/70" : ""
               }`}
             >
-              <dt className="font-mono text-[10px] uppercase tracking-[0.16em] text-ink-soft pt-0.5">
-                {k}
+              <dt className="pt-0.5 font-mono text-[10px] uppercase tracking-[0.16em] text-ink-soft">
+                {r.k}
               </dt>
-              <dd className="text-[13.5px] font-medium leading-6 text-ink">{v}</dd>
+              <dd className="text-[13.5px] font-medium leading-6 text-ink">{r.v}</dd>
+              <dd>
+                {r.view && (
+                  <button
+                    onClick={() => navigate(r.view!)}
+                    aria-label={`Open ${r.k}`}
+                    className="inline-flex size-9 items-center justify-center border border-paper-line text-ink-soft transition-colors hover:border-water hover:text-water"
+                  >
+                    <FileCheck2 className="size-3.5" />
+                  </button>
+                )}
+              </dd>
             </div>
           ))}
         </dl>

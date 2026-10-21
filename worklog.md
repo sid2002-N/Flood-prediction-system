@@ -40,3 +40,32 @@ Work Log:
 Stage Summary:
 - Site identity is now the plain institutional name with zero invented branding; layout unchanged from verified rev 1.0.
 - Model references use the descriptive ID "Kuttanad-LSTM v1.0" (registry-style, not a brand).
+
+---
+Task ID: 3
+Agent: main (Z.ai)
+Task: Full five-view redesign per the detailed redesign mandate — publication-quality research-first dossier: audited all source files, retype scale, Data-view master table, impact-grouped audit, honest model card, 10-slide varied briefing, accessibility, desktop+mobile verification.
+
+Work Log:
+- AUDIT: read all 19 source files (5 views, 4 research components, 8 content libs, shell, globals) before touching code.
+- Tokens: globals.css — :focus-visible rings, prefers-reduced-motion media block; site-shell wrapped in MotionConfig reducedMotion="user".
+- Furniture: SectionHeading retype (30/40px titles, 16px ledes), StatusPill gained "blocked" state, Stat notes now sans 12px, DataTable 13.5px cells, Figure captions 13px sans.
+- Charts: ChartFrame gained FIG. NN convention (Fig 03 monsoon, 05 LULC, 06 coverage, 07 SAR, 08 arch); MonsoonChart got interactive crosshair + daily-value readout; legends re-typed 12px sentence case.
+- Architecture diagram: tensor shapes under every block, 30-day window tick strip, threshold classifier drawn dashed as an explicitly post-model step.
+- NEW components: dataset-explorer.tsx (34 datasets — search, category/audit/sort selects, flagged-only toggle, expandable rows with notes+flags+provenance) and audit-register.tsx (11 flags grouped by impact: target & labels / spatial integrity / units & provenance / archive hygiene, with affects + status + action per flag).
+- Content: audit flags gained impact/affects/status fields; phases gained evidence/depends/blocks fields (phase 04 reworded so training and hookup are not conflated).
+- Overview: §01 retitled "A basin shaped by water", all body copy 16px/leading-8, figures renumbered 01–05.
+- Data view rebuilt: 05 inventory (Gantt + SAR chart + 8 narrative category cards) → 06 dataset register (explorer as primary view) → 07 impact-grouped audit.
+- Model view rebuilt: card rows "predicts"/"does not predict" (discharge ≠ flood depth; threshold step is separate), integration code behind 4 tabs (wrapping TabsList), path status chips (documented/proposal/implemented), metrics panel "no performance claims".
+- Console: badge renamed "demo — deterministic profile" / "live — model-backed"; honesty notes in 12px sans.
+- Status view rebuilt: 6-stat position strip, phase ledger with evidence/depends/blocks lines, deliverable register with per-row view links.
+- Briefing rebuilt: 10 substantive varied slides (research question, landscape, annotated 2018 sparkline, archive, impact-grouped quality, feature window diagram, LSTM pipeline, implementation status, validation gap, prioritized next steps); keys ←/→/Space/Home/End with editable-control guard; exit button; wrapping control bar (dots hidden on mobile).
+- Fixes found in verification: TabsList overflow (796px → wrapping flex-1 triggers), briefing control bar overflow at 375px (flex-wrap + hidden dots).
+- Verification: lint clean; Agent Browser — all 5 views at 1280px and 375px (zero page overflow); explorer search (34→3 for "SAR"), flagged-only (10 of 34), row expansion, filters reachable on mobile; console golden path (2018×14d → FLOOD WARNING, DEMO watermarked); tabs cycle; briefing arrows/Home/End/counter verified; footer in natural document flow (not pinned, not fixed); no browser/page errors. (Several initial "failures" were test-string case mismatches from CSS uppercase — app was correct.)
+- Refreshed download/screenshots/01–05 PNGs of all five redesigned views.
+
+Stage Summary:
+- All five views redesigned, not recolored: new composition, hierarchy, master table, audit grouping, honest target wording, 10-slide presentation, accessibility.
+- Data register: 34 datasets, all filterable/searchable/sortable with expandable provenance.
+- No fabricated metrics; DEMO/LIVE truth preserved; thresholds still calibrated to the audited 2018 peak.
+- Unresolved (unchanged): LSTM target/units unconfirmed by user; weights not yet connected — demo profile remains.

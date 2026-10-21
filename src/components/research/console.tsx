@@ -261,7 +261,7 @@ export function InferenceConsole() {
               : "border-[#e8b44a]/60 text-[#e8b44a]"
           )}
         >
-          {result?.mode === "live" ? "live weights" : "demo weights"}
+          {result?.mode === "live" ? "live — model-backed" : "demo — deterministic profile"}
         </span>
       </div>
 
@@ -353,9 +353,11 @@ export function InferenceConsole() {
             )}
             {running ? "computing" : "run forecast"}
           </button>
-          <p className="mt-3 font-mono text-[8.5px] leading-relaxed tracking-[0.04em] text-paper-dim">
+          <p className="mt-3 text-[12px] leading-5 text-paper-dim">
             deterministic in demo mode — identical inputs reproduce identical
-            outputs, so reviewers can check any number twice.
+            outputs, so reviewers can check any number twice. This is not the
+            trained LSTM; the badge and provenance line switch to LIVE the
+            moment a model-backed endpoint answers.
           </p>
         </div>
 
@@ -417,7 +419,7 @@ export function InferenceConsole() {
 
               <ForecastChart result={result} />
 
-              <p className="mt-4 border-l-2 border-water-bright pl-3 font-mono text-[9px] leading-relaxed tracking-[0.04em] text-paper-dim">
+              <p className="mt-4 border-l-2 border-water-bright pl-3 text-[12px] leading-6 text-paper-dim">
                 {result.provenance} Scenario: {spec.label} · intensity ×
                 {result.intensity.toFixed(1)} · horizon {result.horizon} days.
               </p>

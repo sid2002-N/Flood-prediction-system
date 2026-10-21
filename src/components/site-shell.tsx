@@ -6,7 +6,7 @@
  * shareability, sticky-footer layout, dark masthead footer.
  */
 import { useEffect, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, MotionConfig } from "framer-motion";
 import { OverviewView } from "@/views/overview";
 import { InventoryView } from "@/views/inventory-view";
 import { LabView } from "@/views/lab";
@@ -56,6 +56,7 @@ export function SiteShell() {
   const Active = VIEWS[view];
 
   return (
+    <MotionConfig reducedMotion="user">
     <div className="flex min-h-screen flex-col bg-background">
       <a
         href="#main"
@@ -189,5 +190,6 @@ export function SiteShell() {
         </div>
       </footer>
     </div>
+    </MotionConfig>
   );
 }

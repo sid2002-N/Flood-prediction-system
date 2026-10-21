@@ -2,13 +2,13 @@
  * Kuttanad Flood Prediction System — merged data inventory + inventory-level summary statistics.
  */
 import { categoriesA, type Category } from "./inventory-core";
-import { categoriesB, auditFlags, type AuditFlag } from "./inventory-more";
+import { categoriesB, auditFlags, auditGroups, type AuditFlag } from "./inventory-more";
 
 export type { Category, Dataset, AuditState } from "./inventory-core";
-export type { AuditFlag, FlagSeverity } from "./inventory-more";
+export type { AuditFlag, FlagSeverity, FlagImpact, FlagStatus } from "./inventory-more";
 
 export const inventory: Category[] = [...categoriesA, ...categoriesB];
-export { auditFlags };
+export { auditFlags, auditGroups };
 
 export const inventorySummary = {
   categories: "8",

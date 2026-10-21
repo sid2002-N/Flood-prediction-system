@@ -31,7 +31,7 @@ export function OverviewView({ navigate }: { navigate: (v: ViewKey) => void }) {
                 Forecasting the floods of a land{" "}
                 <em className="italic font-normal text-water-bright">below the sea.</em>
               </h1>
-              <p className="mt-6 max-w-xl text-[15px] leading-7 text-paper-dim">
+              <p className="mt-6 max-w-xl text-[16px] leading-8 text-paper-dim">
                 The Kuttanad Flood Prediction System is an LSTM-based
                 flood-forecasting study of the kayal paddy lands of Alappuzha,
                 Kerala — farmland that lies below sea level, where the monsoon
@@ -70,7 +70,7 @@ export function OverviewView({ navigate }: { navigate: (v: ViewKey) => void }) {
               <Figure
                 src="/images/hero-aerial.jpg"
                 alt="Aerial view of canals between rice paddies and houses in Kuttanad, Kerala"
-                figNo="00"
+                figNo="01"
                 caption="Kuttanad kayal lands — canals cut between paddy fields and homesteads"
                 provenance="photograph · web image search · for illustration"
                 dark
@@ -100,11 +100,11 @@ export function OverviewView({ navigate }: { navigate: (v: ViewKey) => void }) {
         <SectionHeading
           no="01"
           kicker="the problem"
-          title="A basin that floods by design."
+          title="A basin shaped by water."
           lede="Kuttanad is hydrology's hard mode: a stretched, near-sea-level basin where four rivers meet the tide, ringed by bunds that hold water out — until they can't."
         />
         <div className="grid gap-10 lg:grid-cols-[1fr_360px] lg:gap-14">
-          <div className="space-y-5 text-[15px] leading-7 text-ink-soft">
+          <div className="space-y-5 text-[16px] leading-8 text-ink-soft">
             <p>
               The delineated study basin covers <strong className="font-semibold text-ink">1,171.18 km²</strong> with a
               mainstream length of 62.75 km and an elongation ratio of 0.615 — a stretched
@@ -139,7 +139,7 @@ export function OverviewView({ navigate }: { navigate: (v: ViewKey) => void }) {
             <Figure
               src="/images/paddy-flooded.jpg"
               alt="Flooded rice paddies reflecting palm trees in Kerala"
-              figNo="01"
+              figNo="02"
               caption="Paddy under water — the kayal fields' ordinary risk"
               provenance="photograph · web image search · for illustration"
             />
@@ -177,11 +177,11 @@ export function OverviewView({ navigate }: { navigate: (v: ViewKey) => void }) {
                 <div className="font-serif text-[26px] font-semibold leading-none tab-nums text-ink">
                   {s.value}
                 </div>
-                <div className="mt-2 font-mono text-[9px] uppercase tracking-[0.12em] text-water">{s.label}</div>
+                <div className="mt-2 font-mono text-[10px] uppercase tracking-[0.12em] text-water">{s.label}</div>
               </div>
             ))}
           </div>
-          <p className="mb-8 max-w-3xl border-l-2 border-flood pl-4 text-[13.5px] leading-6 text-ink-soft">
+          <p className="mb-8 max-w-3xl border-l-2 border-flood pl-4 text-[14px] leading-7 text-ink-soft">
             Alappuzha district, from the district-wise 2018 impact table — rainfall
             actual 608.2 mm against a 343.1 mm normal. The table covers 14
             districts; district fatalities sum to 339, so the source should be
@@ -193,14 +193,14 @@ export function OverviewView({ navigate }: { navigate: (v: ViewKey) => void }) {
               <Figure
                 src="/images/flood-village.jpg"
                 alt="Aerial view of a village flooded by muddy brown water in Kerala, 2018"
-                figNo="02"
+                figNo="04"
                 caption="August 2018 — villages under brown water"
                 provenance="photograph · web image search · 2018 Kerala floods"
               />
               <LulcBars provenance={lulcProvenance} />
             </div>
           </div>
-          <p className="mt-6 font-mono text-[9px] leading-relaxed tracking-[0.04em] text-ink-soft/80">
+          <p className="mt-6 max-w-3xl text-[13px] leading-6 text-ink-soft/90">
             {figuresNote}
           </p>
         </div>
@@ -235,8 +235,8 @@ export function OverviewView({ navigate }: { navigate: (v: ViewKey) => void }) {
           ].map((c) => (
             <div key={c.t} className="border border-paper-line bg-card p-5">
               <c.icon className="size-4 text-water" />
-              <h3 className="mt-3 font-serif text-[17px] font-semibold text-ink">{c.t}</h3>
-              <p className="mt-2 text-[13.5px] leading-6 text-ink-soft">{c.d}</p>
+              <h3 className="mt-3 font-serif text-[18px] font-semibold text-ink">{c.t}</h3>
+              <p className="mt-2 text-[14px] leading-6 text-ink-soft">{c.d}</p>
             </div>
           ))}
         </div>
@@ -295,8 +295,8 @@ export function OverviewView({ navigate }: { navigate: (v: ViewKey) => void }) {
                 </div>
                 <ul className="mt-4 space-y-2.5">
                   {col.items.map((it) => (
-                    <li key={it} className="flex gap-2.5 text-[13px] leading-6 text-paper-dim">
-                      <span className="mt-[9px] h-px w-3 shrink-0 bg-paper-dim/50" />
+                    <li key={it} className="flex gap-2.5 text-[14px] leading-7 text-paper-dim">
+                      <span className="mt-[11px] h-px w-3 shrink-0 bg-paper-dim/50" />
                       {it}
                     </li>
                   ))}

@@ -61,7 +61,7 @@ export function SectionHeading({
       </div>
       <h2
         className={cn(
-          "mt-5 font-serif text-3xl md:text-[42px] leading-[1.08] font-semibold tracking-tight max-w-3xl",
+          "mt-5 font-serif text-[30px] md:text-[40px] leading-[1.08] font-semibold tracking-tight max-w-3xl",
           dark ? "text-paper" : "text-ink"
         )}
       >
@@ -70,7 +70,7 @@ export function SectionHeading({
       {lede && (
         <p
           className={cn(
-            "mt-4 max-w-2xl text-[15px] leading-7",
+            "mt-4 max-w-2xl text-[16px] leading-8",
             dark ? "text-paper-dim" : "text-ink-soft"
           )}
         >
@@ -118,6 +118,7 @@ export function StatusPill({ state }: { state: string }) {
   const map: Record<string, string> = {
     complete: "bg-water text-paper border-water",
     active: "bg-flood text-paper border-flood",
+    blocked: "bg-transparent text-severe border-severe",
     next: "bg-paper text-ink border-paper-line",
     planned: "bg-transparent text-ink-soft border-paper-line",
   };
@@ -172,7 +173,7 @@ export function Stat({
       </div>
       <div
         className={cn(
-          "mt-2 font-mono text-[9.5px] uppercase tracking-[0.14em] font-medium",
+          "mt-2 font-mono text-[10px] uppercase tracking-[0.14em] font-medium",
           dark ? "text-water-bright" : "text-water"
         )}
       >
@@ -181,7 +182,7 @@ export function Stat({
       {note && (
         <div
           className={cn(
-            "mt-1 font-mono text-[9px] tracking-[0.06em]",
+            "mt-1 text-[12px] leading-5 font-sans",
             dark ? "text-paper-dim" : "text-ink-soft"
           )}
         >
@@ -240,12 +241,12 @@ export function Figure({
           dark ? "border-night-line bg-night-2 text-paper-dim" : "border-paper-line bg-paper-2 text-ink-soft"
         )}
       >
-        <span className={cn("font-mono text-[10px] font-semibold tracking-[0.1em]", dark ? "text-water-bright" : "text-water")}>
+        <span className={cn("font-mono text-[10.5px] font-semibold tracking-[0.1em]", dark ? "text-water-bright" : "text-water")}>
           FIG. {figNo}
         </span>
-        <span className="ml-2 font-mono text-[10px] tracking-[0.04em]">{caption}</span>
+        <span className={cn("ml-2 font-sans text-[13px] leading-snug tracking-[0.01em]", dark ? "text-paper" : "text-ink")}>{caption}</span>
         {provenance && (
-          <span className="block mt-1 font-mono text-[9px] tracking-[0.04em] opacity-75">
+          <span className={cn("block mt-1 font-mono text-[10px] tracking-[0.03em]", dark ? "text-paper-dim/80" : "text-ink-soft/90")}>
             {provenance}
           </span>
         )}
@@ -273,7 +274,7 @@ export function DataTable({
             {columns.map((c) => (
               <th
                 key={c}
-                className="px-3 py-2.5 font-mono text-[9px] uppercase tracking-[0.18em] font-medium text-ink-soft"
+                className="px-3 py-2.5 font-mono text-[10px] uppercase tracking-[0.16em] font-medium text-ink-soft"
               >
                 {c}
               </th>
@@ -298,8 +299,8 @@ export function Td({
   return (
     <td
       className={cn(
-        "border-b border-paper-line/70 px-3 py-3 align-top text-[13px] leading-6 text-ink-soft",
-        mono && "font-mono text-[11.5px] tab-nums",
+        "border-b border-paper-line/70 px-3 py-3 align-top text-[13.5px] leading-6 text-ink-soft",
+        mono && "font-mono text-[12px] tab-nums",
         className
       )}
     >

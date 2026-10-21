@@ -2,30 +2,26 @@
 
 /**
  * Kuttanad Flood Prediction System — Data Inventory view.
- * The complete, honest catalogue of everything collected so far:
- * eight categories, forty-plus datasets, coverage timeline, and the
- * audit flags that keep the project honest.
+ * Opening summary, coverage timeline, the category narrative,
+ * the searchable dataset register, and the impact-grouped audit.
  */
-import { SectionHeading, Eyebrow, AuditChip, Tag, DataTable, Td, Stat } from "@/components/research/furniture";
-import { CoverageGantt } from "@/components/research/charts";
-import { inventory, auditFlags, inventorySummary } from "@/lib/content/inventory";
+import { SectionHeading, Eyebrow, Stat } from "@/components/research/furniture";
+import { CoverageGantt, SarChart } from "@/components/research/charts";
+import { DatasetExplorer } from "@/components/research/dataset-explorer";
+import { AuditRegister } from "@/components/research/audit-register";
+import { inventorySummary } from "@/lib/content/inventory";
 import {
   coverage,
   coverageLegend,
   coverageProvenance,
+  sarProvenance,
 } from "@/lib/content/series";
-import type { FlagSeverity } from "@/lib/content/inventory";
-
-const severityStyle: Record<FlagSeverity, string> = {
-  gap: "border-severe text-severe",
-  caution: "border-flood text-flood",
-  note: "border-paper-line text-ink-soft",
-};
+import { inventory } from "@/lib/content/inventory";
 
 export function InventoryView() {
   return (
     <div className="mx-auto max-w-6xl px-5 md:px-8 py-14 md:py-20">
-      {/* header */}
+      {/* ------------------------------ 05 — header ------------------------------ */}
       <div className="mb-10">
         <div className="flex items-baseline gap-3 border-t border-paper-line pt-3">
           <span className="font-mono text-[11px] font-semibold text-water">05</span>
@@ -34,16 +30,17 @@ export function InventoryView() {
         <h1 className="mt-5 font-serif text-4xl md:text-[52px] leading-[1.05] font-semibold tracking-tight">
           The Data Inventory
         </h1>
-        <p className="mt-5 max-w-3xl text-[15px] leading-7 text-ink-soft">
+        <p className="mt-5 max-w-3xl text-[16px] leading-8 text-ink-soft">
           Everything gathered for this project, filed by category and audited
-          file by file. Each dataset below carries its temporal coverage, its
-          resolution, its format, and an honest audit state —{" "}
-          <span className="font-mono text-[12px] text-water">read</span> (opened in
-          full), <span className="font-mono text-[12px] text-flood">preview</span>{" "}
+          file by file. The register below is the primary record: every dataset
+          carries its temporal coverage, resolution, format and an honest audit
+          state —{" "}
+          <span className="font-mono text-[13px] text-water">read</span> (opened in
+          full), <span className="font-mono text-[13px] text-flood">preview</span>{" "}
           (first rows inspected), or{" "}
-          <span className="font-mono text-[12px] text-ink-soft">catalogued</span>{" "}
+          <span className="font-mono text-[13px] text-ink-soft">catalogued</span>{" "}
           (known from structure, not yet opened). Where a dataset is broken, the
-          defect is listed with it.
+          defect is listed with it — nothing is smoothed over.
         </p>
       </div>
 
@@ -53,9 +50,9 @@ export function InventoryView() {
           { value: inventorySummary.categories, label: "categories", note: "by theme" },
           { value: inventorySummary.folders, label: "source folders", note: "audited" },
           { value: inventorySummary.span, label: "records span", note: "annual to 12-day" },
-          { value: inventorySummary.datasets, label: "datasets", note: "catalogued" },
+          { value: inventorySummary.datasets, label: "datasets", note: "in the register" },
           { value: inventorySummary.agencies, label: "agencies", note: "CWC · IMD · KSEB…" },
-          { value: "11", label: "audit flags", note: "filed in the open" },
+          { value: "11", label: "audit flags", note: "grouped by impact" },
         ].map((s) => (
           <div key={s.label} className="bg-paper">
             <Stat value={s.value} label={s.label} note={s.note} />
@@ -70,114 +67,78 @@ export function InventoryView() {
         provenance={coverageProvenance}
       />
 
-      {/* categories */}
-      <div className="mt-16 space-y-16">
-        {inventory.map((cat) => (
-          <section key={cat.id} aria-labelledby={`cat-${cat.id}`}>
-            {/* category header */}
-            <div className="grid gap-6 border-t-2 border-ink pt-6 lg:grid-cols-[220px_1fr_260px] lg:gap-10">
-              <div>
-                <span className="font-mono text-[24px] font-semibold leading-none text-water">
-                  {cat.no}
-                </span>
-                <h2 id={`cat-${cat.id}`} className="mt-3 font-serif text-[24px] font-semibold leading-tight text-ink">
-                  {cat.title}
-                </h2>
-                <p className="mt-2 font-mono text-[9px] uppercase tracking-[0.14em] leading-relaxed text-ink-soft">
-                  sources — {cat.sources}
-                </p>
-              </div>
-              <div>
-                <p className="text-[14px] leading-7 text-ink-soft">{cat.summary}</p>
-              </div>
-              <dl className="grid grid-cols-2 gap-x-4 gap-y-3 self-start">
-                {cat.highlights.map((h) => (
-                  <div key={h.label} className="border-l border-paper-line pl-3">
-                    <dt className="font-mono text-[15px] font-semibold tab-nums leading-none text-ink">
-                      {h.value}
-                    </dt>
-                    <dd className="mt-1.5 font-mono text-[8.5px] uppercase tracking-[0.12em] text-ink-soft">
-                      {h.label}
-                    </dd>
-                  </div>
-                ))}
-              </dl>
-            </div>
-
-            {/* datasets table */}
-            <DataTable columns={["dataset", "coverage", "resolution", "format", "audit", "notes & flags"]} className="mt-6">
-              {cat.datasets.map((d) => (
-                <tr key={d.name} className="align-top hover:bg-paper-2/50">
-                  <Td className="w-[24%]">
-                    <span className="font-mono text-[11px] font-semibold leading-5 text-ink">
-                      {d.name}
-                    </span>
-                  </Td>
-                  <Td mono className="w-[13%]">{d.coverage}</Td>
-                  <Td mono className="w-[14%]">{d.resolution}</Td>
-                  <Td mono className="w-[13%]">{d.format}</Td>
-                  <Td className="w-[7%]">
-                    <AuditChip state={d.audit} />
-                  </Td>
-                  <Td className="w-[29%]">
-                    <ul className="space-y-1.5">
-                      {d.notes.map((n) => (
-                        <li key={n} className="leading-5 text-ink-soft">{n}</li>
-                      ))}
-                      {d.flags?.map((f) => (
-                        <li key={f} className="flex gap-2 leading-5 text-flood-deep">
-                          <span className="mt-[7px] size-1 shrink-0 bg-flood" />
-                          <span>{f}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </Td>
-                </tr>
-              ))}
-            </DataTable>
-          </section>
-        ))}
+      {/* satellite extent evidence */}
+      <div className="mt-8">
+        <SarChart provenance={sarProvenance} />
       </div>
 
-      {/* ============================ audit flags ============================ */}
+      {/* --------------------------- category narrative --------------------------- */}
+      <section className="mt-20" aria-label="Category summaries">
+        <div className="mb-10 md:mb-12">
+          <div className="flex items-baseline gap-3 border-t border-paper-line pt-3">
+            <span className="font-mono text-[11px] font-semibold text-water">05</span>
+            <Eyebrow>continued — the eight categories</Eyebrow>
+          </div>
+          <h2 className="mt-5 font-serif text-[30px] md:text-[38px] leading-[1.08] font-semibold tracking-tight text-ink">
+            What was collected, and why it matters.
+          </h2>
+          <p className="mt-4 max-w-2xl text-[16px] leading-8 text-ink-soft">
+            Each category is a working part of the forecasting chain — labels,
+            targets, features, physics, exposure and upstream control. The
+            summaries state what each block contributes and what is still wrong
+            with it.
+          </p>
+        </div>
+        <div className="grid gap-px border border-paper-line bg-paper-line lg:grid-cols-2">
+          {inventory.map((cat) => (
+            <article key={cat.id} className="bg-paper p-6">
+              <div className="flex items-baseline gap-3">
+                <span className="font-mono text-[20px] font-semibold leading-none text-water">
+                  {cat.no}
+                </span>
+                <h3 className="font-serif text-[19px] font-semibold leading-tight text-ink">
+                  {cat.title}
+                </h3>
+              </div>
+              <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.12em] text-ink-soft">
+                sources — {cat.sources}
+              </p>
+              <p className="mt-3 text-[14px] leading-7 text-ink-soft">{cat.summary}</p>
+              <div className="mt-4 flex flex-wrap gap-x-6 gap-y-2 border-t border-paper-line/70 pt-3">
+                {cat.highlights.map((h) => (
+                  <div key={h.label} className="min-w-[110px]">
+                    <div className="font-mono text-[13px] font-semibold tab-nums leading-none text-ink">
+                      {h.value}
+                    </div>
+                    <div className="mt-1 text-[11.5px] leading-4 text-ink-soft">{h.label}</div>
+                  </div>
+                ))}
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      {/* --------------------------- 06 — dataset register --------------------------- */}
       <section className="mt-20">
         <SectionHeading
           no="06"
+          kicker="the dataset register"
+          title="Search the archive."
+          lede="The complete dataset record: search by name or content, filter by category and audit depth, sort, and expand any row for its file notes, open flags and source provenance. Rows with open issues are marked — nothing is hidden behind a summary."
+        />
+        <DatasetExplorer />
+      </section>
+
+      {/* --------------------------- 07 — audit register --------------------------- */}
+      <section className="mt-20">
+        <SectionHeading
+          no="07"
           kicker="data audit"
           title="What's wrong with the data — on the record."
-          lede="A research archive earns trust by publishing its defects. These eleven flags were filed during the audit; each carries the action required before the affected data enters the training pool."
+          lede="A research archive earns trust by publishing its defects. Eleven flags were filed during the audit, grouped here by what each one does to model development. Every flag carries the dataset it affects and the next corrective action."
         />
-        <div className="grid gap-px border border-paper-line bg-paper-line md:grid-cols-2">
-          {auditFlags.map((f) => (
-            <div key={f.no} className="bg-paper p-5">
-              <div className="flex items-center justify-between gap-3">
-                <span className="font-mono text-[10px] font-semibold text-ink-soft">
-                  FLAG {f.no}
-                </span>
-                <span
-                  className={`font-mono text-[9px] uppercase tracking-[0.14em] border px-2 py-0.5 ${severityStyle[f.severity]}`}
-                >
-                  {f.severity === "gap" ? "missing piece" : f.severity}
-                </span>
-              </div>
-              <h3 className="mt-2.5 font-serif text-[17px] font-semibold leading-snug text-ink">
-                {f.title}
-              </h3>
-              <p className="mt-2 text-[13px] leading-6 text-ink-soft">{f.detail}</p>
-              <p className="mt-2.5 border-l-2 border-water pl-2.5 text-[12px] leading-5 text-ink">
-                <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-water">
-                  action ·{" "}
-                </span>
-                {f.action}
-              </p>
-            </div>
-          ))}
-        </div>
-        <div className="mt-6 flex flex-wrap gap-2">
-          <Tag tone="severe">missing piece — blocks training table</Tag>
-          <Tag tone="flood">caution — fix before use</Tag>
-          <Tag tone="outline">note — handle with care</Tag>
-        </div>
+        <AuditRegister />
       </section>
     </div>
   );

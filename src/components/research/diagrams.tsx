@@ -66,10 +66,10 @@ export function ApproachPipeline({ dark }: { dark?: boolean }) {
             </span>
             <span className={cn("size-2", statusDot[s.status])} />
           </div>
-          <h3 className="mt-3 font-serif text-[17px] font-semibold text-ink">
+          <h3 className="mt-3 font-serif text-[18px] font-semibold text-ink">
             {s.title}
           </h3>
-          <p className="mt-1.5 font-mono text-[10px] leading-relaxed tracking-[0.02em] text-ink-soft">
+          <p className="mt-1.5 text-[12.5px] leading-6 text-ink-soft">
             {s.desc}
           </p>
         </div>
@@ -87,6 +87,7 @@ const ARCH = [
     h: 120,
     title: "INPUT SEQUENCE",
     sub: "30 days × 14 features",
+    tensor: "(batch, 30, 14)",
     body: ["rainfall (lag 1/3/7)", "rolling sums 3/7/30", "temp · wind · ET₀", "humidity · pressure", "antecedent discharge"],
     tone: "outline",
   },
@@ -96,6 +97,7 @@ const ARCH = [
     h: 120,
     title: "LSTM LAYER 1",
     sub: "128 units",
+    tensor: "(batch, 30, 128)",
     body: ["returns full sequence", "dropout 0.2"],
     tone: "water",
   },
@@ -105,6 +107,7 @@ const ARCH = [
     h: 120,
     title: "LSTM LAYER 2",
     sub: "64 units",
+    tensor: "(batch, 128)",
     body: ["last hidden state", "dropout 0.2"],
     tone: "water",
   },
@@ -114,6 +117,7 @@ const ARCH = [
     h: 120,
     title: "DENSE HEAD",
     sub: "ReLU 32 → linear",
+    tensor: "(batch, H)",
     body: ["per-horizon output", "ŷ t+1 … t+H"],
     tone: "outline",
   },
@@ -123,6 +127,7 @@ const ARCH = [
     h: 120,
     title: "THRESHOLD CLASSIFIER",
     sub: "flood stage ≥ 12",
+    tensor: "post-model step",
     body: ["severe ≥ 15", "risk: low · elevated", "· flood · severe"],
     tone: "flood",
   },
@@ -132,9 +137,9 @@ export function ArchDiagram({ provenance }: { provenance?: string }) {
   const y = 46;
   return (
     <figure className="border border-paper-line bg-card">
-      <div className="flex items-center justify-between border-b border-paper-line bg-paper-2/60 px-4 py-2.5">
-        <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-ink">
-          Model architecture — Kuttanad-LSTM v1.0
+      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-paper-line bg-paper-2/60 px-4 py-2.5">
+        <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-ink">
+          <span className="text-water">FIG. 08 — </span>Model architecture — Kuttanad-LSTM v1.0
         </span>
         <span className="font-mono text-[9px] uppercase tracking-[0.14em] border border-paper-line text-ink-soft px-1.5 py-0.5">
           spec — edit in model-config
@@ -142,7 +147,7 @@ export function ArchDiagram({ provenance }: { provenance?: string }) {
       </div>
       <div className="overflow-x-auto slim-scroll p-4">
         <svg
-          viewBox="0 0 900 210"
+          viewBox="0 0 900 240"
           className="h-auto w-full min-w-[720px]"
           style={{ fontFamily: "var(--font-plex-mono), monospace" }}
           role="img"
@@ -155,6 +160,7 @@ export function ArchDiagram({ provenance }: { provenance?: string }) {
               b.tone === "water" ? "#0e6b68" : b.tone === "flood" ? "#b4530a" : "#1b1915";
             const textFill = b.tone === "outline" ? "#1b1915" : "#f6f3ec";
             const subFill = b.tone === "outline" ? "#0e6b68" : "#f6f3ec";
+            const isPost = b.title === "THRESHOLD CLASSIFIER";
             return (
               <g key={b.title}>
                 <rect
@@ -165,7 +171,7 @@ export function ArchDiagram({ provenance }: { provenance?: string }) {
                   fill={fill === "none" ? "#f6f3ec" : fill}
                   stroke={stroke}
                   strokeWidth="1.4"
-                  strokeDasharray={b.tone === "outline" ? "none" : "none"}
+                  strokeDasharray={isPost ? "6 4" : "none"}
                 />
                 <text x={b.x + 12} y={y + 24} fontSize="11" fontWeight="600" fill={textFill} letterSpacing="0.1em">
                   {b.title}
@@ -178,6 +184,10 @@ export function ArchDiagram({ provenance }: { provenance?: string }) {
                     {line}
                   </text>
                 ))}
+                {/* tensor shape under each block */}
+                <text x={b.x + 12} y={y + b.h - 10} fontSize="8.5" fill="#5f584a" opacity="0.9">
+                  {b.tensor}
+                </text>
                 {i < ARCH.length - 1 && (
                   <g>
                     <line
@@ -187,6 +197,7 @@ export function ArchDiagram({ provenance }: { provenance?: string }) {
                       y2={y + b.h / 2}
                       stroke="#1b1915"
                       strokeWidth="1.4"
+                      strokeDasharray={i === 3 ? "4 3" : "none"}
                     />
                     <polygon
                       points={`${ARCH[i + 1].x - 6},${y + b.h / 2 - 4} ${ARCH[i + 1].x},${y + b.h / 2} ${ARCH[i + 1].x - 6},${y + b.h / 2 + 4}`}
@@ -197,16 +208,32 @@ export function ArchDiagram({ provenance }: { provenance?: string }) {
               </g>
             );
           })}
-          <text x={20} y={22} fontSize="9" fill="#5f584a" letterSpacing="0.16em">
-            SEQUENCE REGRESSION → THRESHOLD CLASSIFICATION
+          {/* input window tick strip */}
+          {Array.from({ length: 30 }).map((_, k) => (
+            <rect
+              key={`tick-${k}`}
+              x={32 + k * 4.5}
+              y={y + 92}
+              width={2.5}
+              height={10}
+              fill="#0e6b68"
+              opacity={k === 29 ? 1 : 0.3 + (k / 29) * 0.55}
+            />
+          ))}
+          <text x={32} y={y + 116} fontSize="8" fill="#5f584a">
+            t−29 ············································ t
           </text>
-          <text x={20} y={196} fontSize="9" fill="#5f584a">
+          <text x={20} y={22} fontSize="9" fill="#5f584a" letterSpacing="0.16em">
+            SEQUENCE REGRESSION → THRESHOLD CLASSIFICATION (POST-MODEL, DASHED)
+          </text>
+          <text x={20} y={226} fontSize="9" fill="#5f584a">
             thresholds in file units — flood 12.0 · severe 15.0 · calibrated against the audited 2018 peak of 17.11
           </text>
         </svg>
       </div>
       {provenance && (
-        <figcaption className="border-t border-paper-line bg-paper-2/40 px-4 py-2 font-mono text-[9px] leading-relaxed tracking-[0.03em] text-ink-soft">
+        <figcaption className="border-t border-paper-line bg-paper-2/40 px-4 py-2 text-[12px] leading-5 text-ink-soft">
+          <span className="font-mono text-[10px] text-ink-soft/80">provenance — </span>
           {provenance}
         </figcaption>
       )}
