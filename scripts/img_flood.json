@@ -1,0 +1,65 @@
+{
+  "success": true,
+  "query": "Kerala floods 2018 flooded houses and streets aerial view",
+  "count": 8,
+  "ranked": true,
+  "captioned_count": 8,
+  "results": [
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/d909b13f1cfd.jpeg",
+      "caption": "Aerial view of a flooded town with muddy brown water surrounding buildings, rooftops, and palm trees. Image edges are darkened/vignetted; some building signage text is partially visible but not fully legible.",
+      "source": "www.vaticannews.va",
+      "original_width": "1280px",
+      "original_height": "844px"
+    },
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/60294238fc48.jpg",
+      "caption": "Aerial view of a flooded village, muddy brown water submerging houses and palm trees near a green riverbank.",
+      "source": "e360.yale.edu",
+      "original_width": "1200px",
+      "original_height": "784px"
+    },
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/834081fc58e2.jpg",
+      "caption": "Aerial view of a severely flooded residential area with houses, trees, and buildings submerged in muddy floodwater; hazy, no text.",
+      "source": "www.10news.com",
+      "original_width": "1280px",
+      "original_height": "720px"
+    },
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/70180514ad1e.jpeg",
+      "caption": "Aerial view of a flooded pink church with red roofs surrounded by submerged palm trees and muddy brown floodwater.",
+      "source": "www.aljazeera.com",
+      "original_width": "1170px",
+      "original_height": "1170px"
+    },
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/363ee783517e.jpg",
+      "caption": "Aerial view of a severely flooded tropical landscape with submerged palm trees, bridges, and roads under murky brown water.",
+      "source": "www.axios.com",
+      "original_width": "1366px",
+      "original_height": "768px"
+    },
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/ee5bc5c104f9.jpg",
+      "caption": "Aerial view of a severe flood submerging town buildings, roads, and trees under muddy brown water, with a bridge visible.",
+      "source": "science.thewire.in",
+      "original_width": "1200px",
+      "original_height": "743px"
+    },
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/27414d45ab2e.jpg",
+      "caption": "Aerial view of a town severely flooded by muddy brown water, roads and houses partially submerged.",
+      "source": "www.confident-group.com",
+      "original_width": "1699px",
+      "original_height": "781px"
+    },
+    {
+      "original_url": "https://z-cdn.chatglm.cn/image-search-mcp/images-ppt/0b7ef247ef81.jpg",
+      "caption": "Aerial view of a flooded village with muddy brown river, houses, and dense green vegetation, possibly in Kerala.",
+      "source": "m.economictimes.com",
+      "original_width": "1200px",
+      "original_height": "900px"
+    }
+  ]
+}

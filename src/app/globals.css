@@ -1,0 +1,189 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  /* shadcn variable bridge */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* KAYAL research palette */
+  --color-paper: var(--paper);
+  --color-paper-2: var(--paper-2);
+  --color-paper-line: var(--paper-line);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-water: var(--water);
+  --color-water-deep: var(--water-deep);
+  --color-water-bright: var(--water-bright);
+  --color-flood: var(--flood);
+  --color-flood-deep: var(--flood-deep);
+  --color-severe: var(--severe);
+  --color-night: var(--night);
+  --color-night-2: var(--night-2);
+  --color-night-line: var(--night-line);
+  --color-paper-dim: var(--paper-dim);
+
+  --font-sans: var(--font-plex-sans);
+  --font-mono: var(--font-plex-mono);
+  --font-serif: var(--font-serif-display);
+
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-xl: 0px;
+}
+
+:root {
+  --radius: 0px;
+
+  /* light "paper" research theme */
+  --background: #f6f3ec;
+  --foreground: #1b1915;
+  --card: #fbf9f3;
+  --card-foreground: #1b1915;
+  --popover: #fbf9f3;
+  --popover-foreground: #1b1915;
+  --primary: #1b1915;
+  --primary-foreground: #f6f3ec;
+  --secondary: #efeae0;
+  --secondary-foreground: #1b1915;
+  --muted: #ece7db;
+  --muted-foreground: #5f584a;
+  --accent: #e5efe9;
+  --accent-foreground: #0a4a47;
+  --destructive: #a62a1f;
+  --border: #d9d2c0;
+  --input: #d9d2c0;
+  --ring: #0e6b68;
+
+  /* KAYAL palette */
+  --paper: #f6f3ec;
+  --paper-2: #efeae0;
+  --paper-line: #d9d2c0;
+  --paper-dim: #a89f8c;
+  --ink: #1b1915;
+  --ink-soft: #5f584a;
+  --water: #0e6b68;
+  --water-deep: #0a4a47;
+  --water-bright: #38b2a9;
+  --flood: #b4530a;
+  --flood-deep: #8c3f06;
+  --severe: #a62a1f;
+  --night: #12100c;
+  --night-2: #1b1812;
+  --night-line: #302b21;
+}
+
+.dark {
+  --background: #12100c;
+  --foreground: #f0ebdd;
+  --card: #1b1812;
+  --card-foreground: #f0ebdd;
+  --popover: #1b1812;
+  --popover-foreground: #f0ebdd;
+  --primary: #f0ebdd;
+  --primary-foreground: #12100c;
+  --secondary: #241f17;
+  --secondary-foreground: #f0ebdd;
+  --muted: #241f17;
+  --muted-foreground: #a89f8c;
+  --accent: #241f17;
+  --accent-foreground: #f0ebdd;
+  --destructive: #d15a4c;
+  --border: #302b21;
+  --input: #302b21;
+  --ring: #38b2a9;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "ss01" on;
+  }
+  ::selection {
+    background: #0e6b68;
+    color: #f6f3ec;
+  }
+}
+
+@layer utilities {
+  .tab-nums {
+    font-variant-numeric: tabular-nums;
+  }
+  .slim-scroll::-webkit-scrollbar {
+    height: 6px;
+    width: 6px;
+  }
+  .slim-scroll::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .slim-scroll::-webkit-scrollbar-thumb {
+    background: #c9c1ae;
+  }
+  .slim-scroll-dark::-webkit-scrollbar {
+    height: 6px;
+    width: 6px;
+  }
+  .slim-scroll::-webkit-scrollbar-thumb {
+    background: #3a3427;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  /* editorial link with tight underline */
+  .ed-link {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    text-decoration-color: var(--color-water);
+  }
+  .ed-link:hover {
+    text-decoration-color: var(--color-ink);
+  }
+  /* treated photography: unified duotone-ish grayscale */
+  .plate {
+    filter: grayscale(38%) contrast(1.06) sepia(6%) brightness(0.98);
+  }
+  .plate-dark {
+    filter: grayscale(55%) contrast(1.08) sepia(10%) brightness(0.82);
+  }
+  /* fine dotted rule used under table headers */
+  .row-rule {
+    border-bottom: 1px solid var(--paper-line);
+  }
+  .grid-paper {
+    background-image:
+      linear-gradient(to right, rgba(27, 25, 21, 0.045) 1px, transparent 1px);
+    background-size: 72px 100%;
+  }
+  .grid-night {
+    background-image:
+      linear-gradient(to right, rgba(240, 235, 221, 0.05) 1px, transparent 1px);
+    background-size: 72px 100%;
+  }
+}
