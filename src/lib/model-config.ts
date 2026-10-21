@@ -1,5 +1,5 @@
 /**
- * KAYAL — model card & inference configuration.
+ * Kuttanad Flood Prediction System — model card & inference configuration.
  *
  * ── HOW TO CONNECT THE TRAINED LSTM ──────────────────────────────
  * This site ships with a deterministic DEMO inference profile so the
@@ -35,7 +35,7 @@
  */
 
 export const modelConfig = {
-  codename: "KAYAL-LSTM",
+  codename: "Kuttanad-LSTM",
   version: "v1.0",
   status: "trained — deployment pending" as const,
   target: "River discharge (daily)",

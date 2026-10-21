@@ -1,5 +1,5 @@
 /**
- * KAYAL — merged data inventory + inventory-level summary statistics.
+ * Kuttanad Flood Prediction System — merged data inventory + inventory-level summary statistics.
  */
 import { categoriesA, type Category } from "./inventory-core";
 import { categoriesB, auditFlags, type AuditFlag } from "./inventory-more";

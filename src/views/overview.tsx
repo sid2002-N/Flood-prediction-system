@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * KAYAL — Overview view.
+ * Kuttanad Flood Prediction System — Overview view.
  * Hero, the problem, the 2018 event, the method, and a status digest.
  */
 import { SectionHeading, Eyebrow, Stat, Figure, Tag } from "@/components/research/furniture";
@@ -32,12 +32,13 @@ export function OverviewView({ navigate }: { navigate: (v: ViewKey) => void }) {
                 <em className="italic font-normal text-water-bright">below the sea.</em>
               </h1>
               <p className="mt-6 max-w-xl text-[15px] leading-7 text-paper-dim">
-                KAYAL is an LSTM-based flood-prediction study for Kuttanad — the
-                kayal paddy lands of Alappuzha, Kerala, where farmland lies below
-                sea level and the monsoon decides the harvest. This dossier
-                documents every dataset collected so far, the August 2018 flood
-                that motivates the work, the trained forecasting model, and
-                exactly where the project stands.
+                The Kuttanad Flood Prediction System is an LSTM-based
+                flood-forecasting study of the kayal paddy lands of Alappuzha,
+                Kerala — farmland that lies below sea level, where the monsoon
+                decides the harvest. This dossier documents every dataset
+                collected so far, the August 2018 flood that motivates the work,
+                the trained forecasting model, and exactly where the project
+                stands.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <button

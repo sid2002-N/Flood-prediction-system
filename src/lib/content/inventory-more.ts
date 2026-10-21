@@ -1,5 +1,5 @@
 /**
- * KAYAL — data inventory content (categories 05–08 + audit flags).
+ * Kuttanad Flood Prediction System — data inventory content (categories 05–08 + audit flags).
  */
 import type { Category } from "./inventory-core";
 

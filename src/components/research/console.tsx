@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * KAYAL — inference console.
+ * Kuttanad Flood Prediction System — inference console.
  * Reviewer-facing forecasting interface. Runs the pluggable adapter
  * in src/lib/model-runner.ts — DEMO profile now, LIVE weights the
  * moment modelConfig.inferenceEndpoint is set.

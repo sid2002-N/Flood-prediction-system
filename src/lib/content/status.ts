@@ -1,5 +1,5 @@
 /**
- * KAYAL — project status content.
+ * Kuttanad Flood Prediction System — project status content.
  * Phases, open questions and next steps, as the work actually stands.
  */
 

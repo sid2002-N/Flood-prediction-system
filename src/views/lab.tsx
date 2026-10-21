@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * KAYAL — Model Lab view.
+ * Kuttanad Flood Prediction System — Model Lab view.
  * Model card, architecture, the live inference console, and the
  * documented integration points where the trained weights plug in.
  */
@@ -210,7 +210,7 @@ export function LabView() {
 from tensorflow.keras.models import load_model
 
 app = FastAPI()
-model = load_model("kayal_lstm_v1.h5")   # your trained weights
+model = load_model("kuttanad_lstm_v1.h5")   # your trained weights
 
 @app.post("/infer")
 def infer(req: dict):

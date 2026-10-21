@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * KAYAL — Briefing view.
+ * Kuttanad Flood Prediction System — Briefing view.
  * A ten-slide research briefing: dark room, big statements,
  * keyboard navigation, progress rule.
  */
@@ -52,7 +52,7 @@ const SLIDES: { id: string; body: React.ReactNode }[] = [
           <em className="italic font-normal text-water-bright">below the sea.</em>
         </h1>
         <p className="mt-8 font-mono text-[11px] uppercase tracking-[0.2em] text-paper-dim">
-          {site.brand} · Kuttanad Flood Research · {site.location} · {site.coords}
+          {site.brand} · {site.location} · {site.coords}
         </p>
         <p className="mt-3 font-mono text-[10px] tracking-[0.08em] text-paper-dim/60">
           navigate with arrow keys — or the controls below
@@ -302,7 +302,7 @@ const SLIDES: { id: string; body: React.ReactNode }[] = [
           sources — {sourceRegistry.map((s) => s.name).join(" · ")}
         </p>
         <p className="mt-3 font-mono text-[9px] tracking-[0.08em] text-paper-dim/50">
-          {site.brand} · {site.brandLong} · {site.location} · {site.coords} · end of briefing
+          {site.brand} · {site.location} · {site.coords} · end of briefing
         </p>
       </div>
     ),

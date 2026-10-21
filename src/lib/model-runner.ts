@@ -1,5 +1,5 @@
 /**
- * KAYAL — inference runner.
+ * Kuttanad Flood Prediction System — inference runner.
  *
  * Pluggable adapter in front of the forecasting console. Resolves to
  * the LIVE endpoint when modelConfig.inferenceEndpoint is set and

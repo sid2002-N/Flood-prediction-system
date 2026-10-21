@@ -1,5 +1,5 @@
 /**
- * KAYAL — editorial furniture.
+ * Kuttanad Flood Prediction System — editorial furniture.
  * The small typographic pieces that make the site read like a
  * technical dossier: eyebrows, tags, figures, stat cells, rules.
  */

@@ -1,5 +1,5 @@
 /**
- * KAYAL — data inventory content (types + categories 01–04).
+ * Kuttanad Flood Prediction System — data inventory content (types + categories 01–04).
  *
  * Everything here reflects the audited state of the collected archive:
  * what exists, where it came from, how far it reaches, and what is

@@ -1,5 +1,5 @@
 /**
- * KAYAL — chart series.
+ * Kuttanad Flood Prediction System — chart series.
  *
  * PROVENANCE POLICY
  * -----------------

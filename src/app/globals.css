@@ -24,7 +24,7 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
 
-  /* KAYAL research palette */
+  /* research palette */
   --color-paper: var(--paper);
   --color-paper-2: var(--paper-2);
   --color-paper-line: var(--paper-line);
@@ -74,7 +74,7 @@
   --input: #d9d2c0;
   --ring: #0e6b68;
 
-  /* KAYAL palette */
+  /* night palette */
   --paper: #f6f3ec;
   --paper-2: #efeae0;
   --paper-line: #d9d2c0;

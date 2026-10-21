@@ -1,5 +1,5 @@
 /**
- * KAYAL — research diagrams.
+ * Kuttanad Flood Prediction System — research diagrams.
  * The approach pipeline and the LSTM architecture, drawn as sharp
  * technical blocks — no rounded corners, no gradients.
  */
@@ -134,7 +134,7 @@ export function ArchDiagram({ provenance }: { provenance?: string }) {
     <figure className="border border-paper-line bg-card">
       <div className="flex items-center justify-between border-b border-paper-line bg-paper-2/60 px-4 py-2.5">
         <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-ink">
-          Model architecture — KAYAL-LSTM v1.0
+          Model architecture — Kuttanad-LSTM v1.0
         </span>
         <span className="font-mono text-[9px] uppercase tracking-[0.14em] border border-paper-line text-ink-soft px-1.5 py-0.5">
           spec — edit in model-config

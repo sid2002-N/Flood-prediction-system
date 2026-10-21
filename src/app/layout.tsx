@@ -21,7 +21,7 @@ const plexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "KAYAL — Kuttanad Flood Research · LSTM Early-Warning Study",
+  title: "Kuttanad Flood Prediction System — LSTM Early-Warning Study",
   description:
     "A research dossier and live LSTM forecasting console for flood prediction in Kuttanad, Alappuzha — the paddy lands that lie below sea level. Full data inventory, the 2018 flood event, model lab, and project status.",
   keywords: [
@@ -38,10 +38,10 @@ export const metadata: Metadata = {
     icon: "/favicon.svg",
   },
   openGraph: {
-    title: "KAYAL — Kuttanad Flood Research",
+    title: "Kuttanad Flood Prediction System",
     description:
       "LSTM-based flood forecasting for the below-sea-level paddy lands of Kuttanad, Kerala.",
-    siteName: "KAYAL",
+    siteName: "Kuttanad Flood Prediction System",
     type: "website",
   },
 };

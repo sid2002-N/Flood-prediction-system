@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * KAYAL — Data Inventory view.
+ * Kuttanad Flood Prediction System — Data Inventory view.
  * The complete, honest catalogue of everything collected so far:
  * eight categories, forty-plus datasets, coverage timeline, and the
  * audit flags that keep the project honest.

@@ -22,3 +22,21 @@ Stage Summary:
 - Deliverable: single-page research dossier at / (5 in-page views: overview, data, model, status, briefing).
 - LSTM room made: set modelConfig.inferenceEndpoint (e.g. "/infer?XTransformPort=8000") or swap runDemo() for ONNX; console, thresholds, risk logic and badges switch to LIVE automatically. Metrics cells fill from modelConfig.metrics.
 - Verified: lint clean, no runtime errors, all interactions browser-tested, design QA passed.
+
+---
+Task ID: 2
+Agent: main (Z.ai)
+Task: De-brand the invented "KAYAL" codename — the site's identity is now exactly "Kuttanad Flood Prediction System" per user instruction ("do not give a name to the site").
+
+Work Log:
+- Audited codebase: 21 files contained uppercase KAYAL (brand) occurrences; lowercase "kayal" (the Kuttanad paddy-land term) deliberately retained as domain vocabulary.
+- Content layer: site.ts brand → "Kuttanad Flood Prediction System", brandLong → "LSTM Early-Warning Study", tagline → "compiled for research review · single-page dossier".
+- Metadata: layout.tsx page title + OpenGraph title/siteName now the full system name.
+- Chrome: header wordmark shows the full name (responsive 9.5/11px mono, suffix span removed); aria-label updated; footer lockup restructured (brand line + brandLong subtitle); © bar simplified.
+- Views: overview hero reworded ("The Kuttanad Flood Prediction System is an LSTM-based flood-forecasting study of the kayal paddy lands…"); status ledger + model card + architecture caption now "Kuttanad-LSTM v1.0"; lab snippet filename → kuttanad_lstm_v1.h5; briefing cover/close strips de-duplicated.
+- Bulk-swept 18 comment headers via sed; globals.css palette comments neutralized.
+- Verification: grep → zero uppercase KAYAL in src; lint clean; Agent Browser — title, header wordmark, all five views, mobile 375px wordmark fits (252px), console golden path (2018×14d → FLOOD) passes with "Kuttanad-LSTM" naming; no browser/page errors; dev.log clean.
+
+Stage Summary:
+- Site identity is now the plain institutional name with zero invented branding; layout unchanged from verified rev 1.0.
+- Model references use the descriptive ID "Kuttanad-LSTM v1.0" (registry-style, not a brand).

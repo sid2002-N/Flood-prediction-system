@@ -1,5 +1,5 @@
 /**
- * KAYAL — SVG chart kit.
+ * Kuttanad Flood Prediction System — SVG chart kit.
  * Hand-drawn editorial charts: hairline grids, mono axis labels,
  * no drop shadows, no rounded corners. Every chart ships with a
  * provenance line underneath.

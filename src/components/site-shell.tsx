@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * KAYAL — site shell.
+ * Kuttanad Flood Prediction System — site shell.
  * Single-route dossier: five views switched in-page, hash-linked for
  * shareability, sticky-footer layout, dark masthead footer.
  */
@@ -71,16 +71,13 @@ export function SiteShell() {
             <button
               onClick={() => navigate("overview")}
               className="group flex items-baseline gap-2.5"
-              aria-label="KAYAL home"
+              aria-label="Kuttanad Flood Prediction System — home"
             >
               <span className="flex size-5 items-center justify-center bg-ink font-mono text-[10px] font-semibold text-paper group-hover:bg-water">
                 K·
               </span>
-              <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.18em] text-ink">
+              <span className="font-mono text-[9.5px] sm:text-[11px] font-semibold uppercase tracking-[0.13em] sm:tracking-[0.18em] text-ink">
                 {site.brand}
-                <span className="ml-2 hidden font-normal tracking-[0.1em] text-ink-soft sm:inline">
-                  — {site.brandLong}
-                </span>
               </span>
             </button>
             <div className="hidden items-center gap-3 font-mono text-[9px] uppercase tracking-[0.14em] text-ink-soft lg:flex">
@@ -144,9 +141,12 @@ export function SiteShell() {
                   K·
                 </span>
                 <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.18em]">
-                  {site.brand} — {site.brandLong}
+                  {site.brand}
                 </span>
               </div>
+              <p className="mt-2 font-mono text-[9px] uppercase tracking-[0.14em] text-water-bright">
+                {site.brandLong}
+              </p>
               <p className="mt-4 max-w-sm text-[13px] leading-6 text-paper-dim">
                 {site.siteNote}
               </p>
@@ -180,10 +180,10 @@ export function SiteShell() {
           </div>
           <div className="mt-10 flex flex-wrap items-center justify-between gap-3 border-t border-night-line pt-5">
             <span className="font-mono text-[9px] tracking-[0.12em] text-paper-dim/60">
-              © 2026 {site.brand} — compiled for research review · single-page dossier
+              © 2026 {site.brand} — {site.tagline}
             </span>
             <span className="font-mono text-[9px] tracking-[0.12em] text-paper-dim/60">
-              rev. 1.0 · {site.tagline}
+              rev. 1.0 · {site.location}
             </span>
           </div>
         </div>

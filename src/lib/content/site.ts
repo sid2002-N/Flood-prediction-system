@@ -1,12 +1,12 @@
 /**
- * KAYAL — site-level content.
+ * Kuttanad Flood Prediction System — site-level content.
  * Brand, coordinates, hero statistics and source registry.
  */
 
 export const site = {
-  brand: "KAYAL",
-  brandLong: "Kuttanad Flood Research",
-  tagline: "LSTM early-warning study",
+  brand: "Kuttanad Flood Prediction System",
+  brandLong: "LSTM Early-Warning Study",
+  tagline: "compiled for research review · single-page dossier",
   location: "Alappuzha · Kerala · India",
   coords: "9.5°N 76.5°E",
   period: "2015 — 2026",

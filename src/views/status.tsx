@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * KAYAL — Status view.
+ * Kuttanad Flood Prediction System — Status view.
  * Phase ledger, open questions, and the deliverable register.
  */
 import { SectionHeading, Eyebrow, StatusPill } from "@/components/research/furniture";
@@ -13,7 +13,7 @@ const REGISTER = [
   ["collected archive", "8 categories · 22 folders · 1901–2026 · 40+ datasets"],
   ["audit ledger", "11 flags filed — every defect documented with an action"],
   ["ML-ready weather table", "21,915 daily rows · lags · rolling sums · 1961–2020"],
-  ["trained model", "KAYAL-LSTM v1.0 — awaiting weights hookup"],
+  ["trained model", "Kuttanad-LSTM v1.0 — awaiting weights hookup"],
   ["this dossier", "inventory · event analysis · console · briefing — live"],
 ];
 
