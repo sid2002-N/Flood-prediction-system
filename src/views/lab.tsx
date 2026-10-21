@@ -70,28 +70,28 @@ export function LabView() {
                   i !== MODEL_CARD.length - 1 ? "border-b border-paper-line/70" : ""
                 }`}
               >
-                <dt className="pt-0.5 font-mono text-[10px] uppercase tracking-[0.14em] text-ink-soft">
+                <dt className="pt-0.5 text-[12.5px] font-semibold text-ink-soft">
                   {k}
                 </dt>
                 <dd className="text-[13.5px] font-medium leading-6 text-ink">{v}</dd>
               </div>
             ))}
           </dl>
-          <div className="mt-4 border border-dashed border-paper-line bg-paper-2/40 px-4 py-3">
-            <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-ink-soft">
-              metrics — published after integration
+          <div className="mt-4 rounded-xl border border-dashed border-black/15 bg-paper-2/60 px-4 py-3">
+            <p className="text-[12.5px] font-semibold text-ink-soft">
+              Metrics — published after integration
             </p>
-            <div className="mt-2 grid grid-cols-3 gap-px border border-paper-line bg-paper-line">
+            <div className="mt-2 grid grid-cols-3 gap-2">
               {[
                 ["NSE", modelConfig.metrics.nse],
                 ["MAE", modelConfig.metrics.mae],
                 ["peak err %", modelConfig.metrics.peakErrorPct],
               ].map(([k, v]) => (
-                <div key={k as string} className="bg-paper px-3 py-2.5 text-center">
-                  <div className="font-mono text-[15px] font-semibold tab-nums text-ink-soft">
+                <div key={k as string} className="rounded-lg bg-paper px-3 py-2.5 text-center">
+                  <div className="text-[15px] font-semibold tab-nums text-ink-soft">
                     {v == null ? "—" : v}
                   </div>
-                  <div className="mt-0.5 font-mono text-[9px] uppercase tracking-[0.14em] text-ink-soft/70">
+                  <div className="mt-0.5 text-[12px] font-medium text-ink-soft/70">
                     {k}
                   </div>
                 </div>
@@ -108,8 +108,8 @@ export function LabView() {
           <Eyebrow>input features</Eyebrow>
           <div className="mt-4 space-y-4">
             {modelFeatures.map((g) => (
-              <div key={g.group} className="border border-paper-line bg-card">
-                <div className="border-b border-paper-line bg-paper-2/60 px-4 py-2 font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-ink">
+              <div key={g.group} className="overflow-hidden rounded-xl border border-black/[0.08] bg-paper">
+                <div className="border-b border-black/[0.06] bg-paper-2/70 px-4 py-2.5 text-[13px] font-semibold text-ink">
                   {g.group}
                 </div>
                 <div className="flex flex-wrap gap-1.5 p-3.5">
@@ -161,12 +161,12 @@ export function LabView() {
         />
 
         {/* comparison */}
-        <div className="grid gap-px border border-paper-line bg-paper-line md:grid-cols-3">
+        <div className="grid gap-3 md:grid-cols-3">
           {integrationPaths.map((p, i) => (
-            <div key={p.id} className="bg-paper p-5">
+            <div key={p.id} className="apple-shadow rounded-xl border border-black/[0.06] bg-paper p-5">
               <div className="flex items-center justify-between">
-                <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-ink-soft">
-                  path {String.fromCharCode(65 + i)}
+                <span className="text-[12px] font-semibold text-ink-soft">
+                  Path {String.fromCharCode(65 + i)}
                 </span>
                 {i === 0 ? (
                   <Cable className="size-3.5 text-water" />
@@ -176,17 +176,17 @@ export function LabView() {
                   <FileCog className="size-3.5 text-water" />
                 )}
               </div>
-              <h3 className="mt-2.5 font-serif text-[17px] font-semibold leading-snug text-ink">
+              <h3 className="mt-2.5 text-[17px] font-semibold leading-snug tracking-[-0.01em] text-ink">
                 {p.title}
               </h3>
               <p className="mt-2 text-[13px] leading-6 text-ink-soft">{p.summary}</p>
-              <p className="mt-3 font-mono text-[10px] leading-5 tracking-[0.04em] text-water">
+              <p className="mt-3 font-mono text-[11.5px] leading-5 text-water">
                 {p.files}
               </p>
-              <p className="mt-3 border-t border-paper-line/70 pt-2.5 font-mono text-[9.5px] uppercase tracking-[0.12em]">
-                {i === 0 && <span className="text-water">recommended · documented — contract below</span>}
-                {i === 1 && <span className="text-ink-soft">proposal — needs an ONNX export of the checkpoint</span>}
-                {i === 2 && <span className="text-flood">implemented — running now, everything is labelled DEMO</span>}
+              <p className="mt-3 border-t border-black/[0.06] pt-2.5 text-[12px] font-medium">
+                {i === 0 && <span className="text-water">Recommended · documented — contract below</span>}
+                {i === 1 && <span className="text-ink-soft">Proposal — needs an ONNX export of the checkpoint</span>}
+                {i === 2 && <span className="text-flood">Implemented — running now, everything is labelled DEMO</span>}
               </p>
             </div>
           ))}
@@ -205,7 +205,7 @@ export function LabView() {
                 <TabsTrigger
                   key={v}
                   value={v}
-                  className="h-10 flex-1 basis-52 rounded-none border-0 border-r border-paper-line bg-paper px-4 font-mono text-[10.5px] uppercase tracking-[0.1em] text-ink-soft data-[state=active]:bg-ink data-[state=active]:text-paper"
+                  className="h-10 flex-1 basis-52 rounded-md px-4 text-[13px] font-medium text-ink-soft data-[state=active]:bg-ink data-[state=active]:text-paper"
                 >
                   {label}
                 </TabsTrigger>
@@ -280,7 +280,7 @@ inferenceEndpoint: null,`}
                   ].map(([a, b]) => (
                     <li key={a} className="flex flex-wrap items-baseline gap-x-2 text-[13.5px] leading-6">
                       <span className="font-mono text-[12px] font-medium text-ink">{a}</span>
-                      <span className="text-paper-dim">→</span>
+                      <span className="text-ink-soft/60">→</span>
                       <span className="text-ink-soft">{b}</span>
                     </li>
                   ))}

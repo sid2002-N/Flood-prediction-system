@@ -1,24 +1,5 @@
-import type { Metadata } from "next";
-import { Source_Serif_4, IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
-
-const serifDisplay = Source_Serif_4({
-  variable: "--font-serif-display",
-  subsets: ["latin"],
-  style: ["normal", "italic"],
-});
-
-const plexSans = IBM_Plex_Sans({
-  variable: "--font-plex-sans",
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-});
-
-const plexMono = IBM_Plex_Mono({
-  variable: "--font-plex-mono",
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-});
 
 export const metadata: Metadata = {
   title: "Kuttanad Flood Prediction System — LSTM Early-Warning Study",
@@ -46,6 +27,27 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport: Viewport = {
+  themeColor: "#ffffff",
+  width: "device-width",
+  initialScale: 1,
+};
+
+/*
+ * All five dossier views stay mounted and toggle visibility, so their
+ * imagery is preloaded once at boot — no first-visit load flash when a
+ * reviewer switches views.
+ */
+const PRELOAD_IMAGES = [
+  "/images/hero-aerial.jpg",
+  "/images/paddy-dusk.jpg",
+  "/images/paddy-flooded.jpg",
+  "/images/flood-church.jpg",
+  "/images/flood-village.jpg",
+  "/images/canal-canoe.jpg",
+  "/images/backwaters.jpg",
+];
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -53,9 +55,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${serifDisplay.variable} ${plexSans.variable} ${plexMono.variable} antialiased bg-background text-foreground min-h-screen`}
-      >
+      <head>
+        {PRELOAD_IMAGES.map((src) => (
+          <link key={src} rel="preload" as="image" href={src} />
+        ))}
+      </head>
+      <body className="antialiased bg-background text-foreground min-h-screen">
         {children}
       </body>
     </html>

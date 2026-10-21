@@ -52,10 +52,10 @@ export function InventoryView() {
           href={driveRoot.url}
           target="_blank"
           rel="noopener noreferrer"
-          className="group mt-5 inline-flex min-h-[44px] items-center gap-2 border border-paper-line bg-paper-2/60 px-4 py-2.5 font-mono text-[10.5px] font-semibold uppercase tracking-[0.14em] text-ink transition-colors hover:border-water hover:text-water"
+          className="group mt-5 inline-flex min-h-[44px] items-center gap-2 rounded-full border border-black/15 bg-paper-2/60 px-4 py-2.5 text-[13.5px] font-semibold text-ink transition-colors hover:border-water hover:text-water"
         >
-          <ExternalLink className="size-3.5" />
-          open the drive archive — 22 folders
+          <ExternalLink className="size-4" />
+          Open the Drive archive — 22 folders
         </a>
         <p className="mt-3 max-w-3xl text-[12.5px] leading-5 text-ink-soft/80">
           {driveCaveat}
@@ -114,12 +114,12 @@ export function InventoryView() {
                 <span className="font-mono text-[20px] font-semibold leading-none text-water">
                   {cat.no}
                 </span>
-                <h3 className="font-serif text-[19px] font-semibold leading-tight text-ink">
+                <h3 className="text-[19px] font-semibold leading-tight tracking-[-0.01em] text-ink">
                   {cat.title}
                 </h3>
               </div>
-              <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.12em] text-ink-soft">
-                sources — {cat.sources}
+              <p className="mt-2 text-[12px] font-medium text-ink-soft">
+                Sources — {cat.sources}
               </p>
               <p className="mt-3 text-[14px] leading-7 text-ink-soft">{cat.summary}</p>
               <div className="mt-4 flex flex-wrap gap-x-6 gap-y-2 border-t border-paper-line/70 pt-3">
@@ -128,14 +128,14 @@ export function InventoryView() {
                     <div className="font-mono text-[13px] font-semibold tab-nums leading-none text-ink">
                       {h.value}
                     </div>
-                    <div className="mt-1 text-[11.5px] leading-4 text-ink-soft">{h.label}</div>
+                    <div className="mt-1 text-[12px] leading-4 text-ink-soft">{h.label}</div>
                   </div>
                 ))}
               </div>
               {(categoryDriveLinks[cat.id]?.length ?? 0) > 0 && (
                 <div className="mt-4 flex flex-wrap items-center gap-1.5 border-t border-paper-line/70 pt-3">
-                  <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-ink-soft/70">
-                    drive ·
+                  <span className="text-[12px] font-semibold text-ink-soft/70">
+                    Drive ·
                   </span>
                   {categoryDriveLinks[cat.id].map((l) => (
                     <a

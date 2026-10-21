@@ -99,15 +99,15 @@ export function StatusView({ navigate }: { navigate: (v: ViewKey) => void }) {
               }`}
             />
             <div className="flex flex-wrap items-center gap-3">
-              <span className="font-mono text-[10px] font-semibold tracking-[0.16em] text-ink-soft">
-                PHASE {p.no}
+              <span className="text-[13px] font-semibold tracking-[0] text-ink-soft">
+                Phase {p.no}
               </span>
               <StatusPill state={p.status} />
-              <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-paper-dim">
+              <span className="text-[12px] font-medium text-ink-soft">
                 {p.when}
               </span>
             </div>
-            <h2 className="mt-2 font-serif text-[22px] font-semibold text-ink">{p.title}</h2>
+            <h2 className="mt-2 text-[23px] font-semibold tracking-[-0.01em] text-ink">{p.title}</h2>
             <p className="mt-1.5 max-w-2xl text-[14.5px] leading-7 text-ink-soft">{p.summary}</p>
             <ul className="mt-3 max-w-2xl space-y-2">
               {p.points.map((pt) => (
@@ -120,24 +120,24 @@ export function StatusView({ navigate }: { navigate: (v: ViewKey) => void }) {
             <div className="mt-3 flex max-w-2xl flex-col gap-1.5">
               {p.evidence && (
                 <p className="flex gap-2 text-[12.5px] leading-6">
-                  <span className="font-mono text-[9.5px] uppercase tracking-[0.14em] text-water shrink-0 pt-0.5">
-                    evidence ·
+                  <span className="text-[12px] font-semibold text-water shrink-0 pt-0.5">
+                    Evidence ·
                   </span>
                   <span className="text-ink-soft">{p.evidence}</span>
                 </p>
               )}
               {p.depends && (
                 <p className="flex gap-2 text-[12.5px] leading-6">
-                  <span className="font-mono text-[9.5px] uppercase tracking-[0.14em] text-ink-soft shrink-0 pt-0.5">
-                    depends on ·
+                  <span className="text-[12px] font-semibold text-ink-soft shrink-0 pt-0.5">
+                    Depends on ·
                   </span>
                   <span className="text-ink-soft">{p.depends}</span>
                 </p>
               )}
               {p.blocks && (
                 <p className="flex gap-2 text-[12.5px] leading-6">
-                  <span className="font-mono text-[9.5px] uppercase tracking-[0.14em] text-flood-deep shrink-0 pt-0.5">
-                    blocks ·
+                  <span className="text-[12px] font-semibold text-flood-deep shrink-0 pt-0.5">
+                    Blocks ·
                   </span>
                   <span className="text-flood-deep">{p.blocks}</span>
                 </p>
@@ -186,7 +186,7 @@ export function StatusView({ navigate }: { navigate: (v: ViewKey) => void }) {
                 i !== REGISTER.length - 1 ? "border-b border-paper-line/70" : ""
               }`}
             >
-              <dt className="pt-0.5 font-mono text-[10px] uppercase tracking-[0.16em] text-ink-soft">
+              <dt className="pt-0.5 text-[12.5px] font-semibold text-ink-soft">
                 {r.k}
               </dt>
               <dd className="text-[13.5px] font-medium leading-6 text-ink">{r.v}</dd>
@@ -207,17 +207,17 @@ export function StatusView({ navigate }: { navigate: (v: ViewKey) => void }) {
         <div className="mt-8 flex flex-wrap gap-3">
           <button
             onClick={() => navigate("model")}
-            className="group inline-flex min-h-[44px] items-center gap-2 border border-ink bg-ink px-5 py-3 font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-paper transition-colors hover:bg-water"
+            className="group inline-flex min-h-[44px] items-center gap-2 rounded-full bg-ink px-5 py-2.5 text-[14px] font-semibold text-paper transition-colors hover:bg-water"
           >
-            go to the model console
-            <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-0.5" />
+            Go to the model console
+            <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
           </button>
           <button
             onClick={() => navigate("data")}
-            className="group inline-flex min-h-[44px] items-center gap-2 border border-paper-line px-5 py-3 font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-ink transition-colors hover:border-ink"
+            className="group inline-flex min-h-[44px] items-center gap-2 rounded-full border border-black/15 px-5 py-2.5 text-[14px] font-semibold text-ink transition-colors hover:border-ink"
           >
-            review the data inventory
-            <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-0.5" />
+            Review the data inventory
+            <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
           </button>
         </div>
       </div>

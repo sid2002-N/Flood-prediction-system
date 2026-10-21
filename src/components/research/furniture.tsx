@@ -1,7 +1,9 @@
 /**
- * Kuttanad Flood Prediction System — editorial furniture.
- * The small typographic pieces that make the site read like a
- * technical dossier: eyebrows, tags, figures, stat cells, rules.
+ * Kuttanad Flood Prediction System — design-system furniture.
+ * Apple design science: SF system type with negative display
+ * tracking, tinted rounded-full pills, soft-elevation cards,
+ * hairline rules. Mono is reserved for coordinates, numerics and
+ * provenance — never for identity typography.
  */
 import { cn } from "@/lib/utils";
 
@@ -19,7 +21,7 @@ export function Eyebrow({
   return (
     <p
       className={cn(
-        "font-mono text-[10px] uppercase tracking-[0.22em] font-medium",
+        "text-[13px] font-semibold tracking-[0.01em]",
         tone === "ink" && "text-ink-soft",
         tone === "paper" && "text-paper-dim",
         tone === "water" && "text-water",
@@ -48,20 +50,27 @@ export function SectionHeading({
 }) {
   return (
     <div className="mb-10 md:mb-14">
-      <div
-        className={cn(
-          "flex items-baseline gap-3 border-t pt-3",
-          dark ? "border-night-line" : "border-paper-line"
-        )}
-      >
-        <span className="font-mono text-[11px] font-semibold text-water">
+      <div className="flex items-baseline gap-2">
+        <span
+          className={cn(
+            "text-[13px] font-semibold tab-nums",
+            dark ? "text-water-bright" : "text-water"
+          )}
+        >
           {no}
         </span>
-        <Eyebrow tone={dark ? "paper" : "ink"}>{kicker}</Eyebrow>
+        <span
+          className={cn(
+            "text-[13px] font-semibold",
+            dark ? "text-paper-dim" : "text-ink-soft"
+          )}
+        >
+          · {kicker}
+        </span>
       </div>
       <h2
         className={cn(
-          "mt-5 font-serif text-[30px] md:text-[40px] leading-[1.08] font-semibold tracking-tight max-w-3xl",
+          "mt-3 max-w-3xl text-[34px] font-semibold leading-[1.07] tracking-[-0.02em] md:text-[46px]",
           dark ? "text-paper" : "text-ink"
         )}
       >
@@ -70,7 +79,7 @@ export function SectionHeading({
       {lede && (
         <p
           className={cn(
-            "mt-4 max-w-2xl text-[16px] leading-8",
+            "mt-4 max-w-2xl text-[17px] leading-7 md:text-[18px] md:leading-8",
             dark ? "text-paper-dim" : "text-ink-soft"
           )}
         >
@@ -83,7 +92,13 @@ export function SectionHeading({
 
 /* -------------------------------- Tag -------------------------------- */
 
-export type TagTone = "neutral" | "water" | "flood" | "severe" | "outline" | "dark";
+export type TagTone =
+  | "neutral"
+  | "water"
+  | "flood"
+  | "severe"
+  | "outline"
+  | "dark";
 
 export function Tag({
   children,
@@ -97,13 +112,13 @@ export function Tag({
   return (
     <span
       className={cn(
-        "inline-flex items-center font-mono text-[9.5px] uppercase tracking-[0.16em] font-medium px-2 py-1 border whitespace-nowrap",
-        tone === "neutral" && "bg-paper-2 text-ink-soft border-paper-line",
-        tone === "water" && "bg-water text-paper border-water",
-        tone === "flood" && "bg-flood text-paper border-flood",
-        tone === "severe" && "bg-severe text-paper border-severe",
-        tone === "outline" && "bg-transparent text-ink-soft border-paper-line",
-        tone === "dark" && "bg-night text-paper border-night-line",
+        "inline-flex items-center whitespace-nowrap rounded-full px-2.5 py-1 text-[12px] font-medium",
+        tone === "neutral" && "bg-black/[0.05] text-ink-soft",
+        tone === "water" && "bg-water/10 text-water",
+        tone === "flood" && "bg-flood/10 text-flood",
+        tone === "severe" && "bg-severe/10 text-severe",
+        tone === "outline" && "border border-black/10 text-ink-soft",
+        tone === "dark" && "bg-night text-paper",
         className
       )}
     >
@@ -116,23 +131,24 @@ export function Tag({
 
 export function StatusPill({ state }: { state: string }) {
   const map: Record<string, string> = {
-    complete: "bg-water text-paper border-water",
-    active: "bg-flood text-paper border-flood",
-    blocked: "bg-transparent text-severe border-severe",
-    next: "bg-paper text-ink border-paper-line",
-    planned: "bg-transparent text-ink-soft border-paper-line",
+    complete: "bg-water/10 text-water",
+    active: "bg-flood/10 text-flood",
+    blocked: "bg-severe/10 text-severe",
+    next: "bg-black/[0.05] text-ink-soft",
+    planned: "bg-black/[0.03] text-ink-soft/80",
   };
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1.5 font-mono text-[9.5px] uppercase tracking-[0.16em] font-medium px-2 py-1 border",
+        "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[12px] font-medium",
         map[state] ?? map.planned
       )}
     >
       {state === "active" && (
-        <span className="size-1.5 rounded-full bg-paper animate-pulse" />
+        <span className="size-1.5 rounded-full bg-flood animate-pulse" />
       )}
-      {state === "complete" && <span className="size-1.5 rounded-full bg-paper" />}
+      {state === "complete" && <span className="size-1.5 rounded-full bg-water" />}
+      {state === "blocked" && <span className="size-1.5 rounded-full bg-severe" />}
       {state}
     </span>
   );
@@ -165,7 +181,7 @@ export function Stat({
     <div className={cn("px-5 py-5", className)}>
       <div
         className={cn(
-          "font-serif text-[26px] md:text-[30px] leading-none font-semibold tab-nums tracking-tight",
+          "text-[32px] font-semibold leading-none tab-nums tracking-[-0.02em] md:text-[38px]",
           dark ? "text-paper" : "text-ink"
         )}
       >
@@ -173,7 +189,7 @@ export function Stat({
       </div>
       <div
         className={cn(
-          "mt-2 font-mono text-[10px] uppercase tracking-[0.14em] font-medium",
+          "mt-2 text-[13px] font-semibold",
           dark ? "text-water-bright" : "text-water"
         )}
       >
@@ -182,7 +198,7 @@ export function Stat({
       {note && (
         <div
           className={cn(
-            "mt-1 text-[12px] leading-5 font-sans",
+            "mt-1 text-[13px] leading-5",
             dark ? "text-paper-dim" : "text-ink-soft"
           )}
         >
@@ -220,8 +236,8 @@ export function Figure({
     <figure className={className}>
       <div
         className={cn(
-          "border overflow-hidden bg-night",
-          dark ? "border-night-line" : "border-paper-line"
+          "apple-shadow overflow-hidden rounded-xl bg-night",
+          dark && "rounded-none shadow-none"
         )}
       >
         <img
@@ -237,16 +253,33 @@ export function Figure({
       </div>
       <figcaption
         className={cn(
-          "border-x border-b px-4 py-3",
-          dark ? "border-night-line bg-night-2 text-paper-dim" : "border-paper-line bg-paper-2 text-ink-soft"
+          "px-1 pt-3",
+          dark ? "text-paper-dim" : "text-ink-soft"
         )}
       >
-        <span className={cn("font-mono text-[10.5px] font-semibold tracking-[0.1em]", dark ? "text-water-bright" : "text-water")}>
-          FIG. {figNo}
+        <span
+          className={cn(
+            "text-[13px] font-semibold",
+            dark ? "text-water-bright" : "text-water"
+          )}
+        >
+          Fig. {figNo}
         </span>
-        <span className={cn("ml-2 font-sans text-[13px] leading-snug tracking-[0.01em]", dark ? "text-paper" : "text-ink")}>{caption}</span>
+        <span
+          className={cn(
+            "ml-2 text-[14px] leading-snug",
+            dark ? "text-paper" : "text-ink"
+          )}
+        >
+          {caption}
+        </span>
         {provenance && (
-          <span className={cn("block mt-1 font-mono text-[10px] tracking-[0.03em]", dark ? "text-paper-dim/80" : "text-ink-soft/90")}>
+          <span
+            className={cn(
+              "mt-1 block font-mono text-[11px] tracking-[0.01em]",
+              dark ? "text-paper-dim/80" : "text-ink-soft/90"
+            )}
+          >
             {provenance}
           </span>
         )}
@@ -267,14 +300,19 @@ export function DataTable({
   className?: string;
 }) {
   return (
-    <div className={cn("overflow-x-auto slim-scroll", className)}>
+    <div
+      className={cn(
+        "slim-scroll overflow-x-auto rounded-xl border border-black/[0.08] bg-paper",
+        className
+      )}
+    >
       <table className="w-full min-w-[640px] border-collapse text-left">
         <thead>
-          <tr className={cn("border-y border-paper-line bg-paper-2/60")}>
+          <tr className="border-b border-black/[0.08] bg-black/[0.02]">
             {columns.map((c) => (
               <th
                 key={c}
-                className="px-3 py-2.5 font-mono text-[10px] uppercase tracking-[0.16em] font-medium text-ink-soft"
+                className="px-3 py-2.5 text-[12px] font-medium text-ink-soft"
               >
                 {c}
               </th>
@@ -299,7 +337,7 @@ export function Td({
   return (
     <td
       className={cn(
-        "border-b border-paper-line/70 px-3 py-3 align-top text-[13.5px] leading-6 text-ink-soft",
+        "border-b border-black/[0.06] px-3 py-3 align-top text-[13.5px] leading-6 text-ink-soft",
         mono && "font-mono text-[12px] tab-nums",
         className
       )}

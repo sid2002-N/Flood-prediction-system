@@ -27,7 +27,7 @@ export function OverviewView({ navigate }: { navigate: (v: ViewKey) => void }) {
               <Eyebrow tone="paper">
                 research dossier · {site.location} · {site.coords}
               </Eyebrow>
-              <h1 className="mt-6 font-serif text-[42px] leading-[1.04] font-semibold tracking-tight md:text-[64px]">
+              <h1 className="mt-6 font-serif text-[42px] leading-[1.05] font-semibold tracking-[-0.022em] md:text-[64px]">
                 Forecasting the floods of a land{" "}
                 <em className="italic font-normal text-water-bright">below the sea.</em>
               </h1>
@@ -43,23 +43,23 @@ export function OverviewView({ navigate }: { navigate: (v: ViewKey) => void }) {
               <div className="mt-8 flex flex-wrap gap-3">
                 <button
                   onClick={() => navigate("data")}
-                  className="group inline-flex min-h-[44px] items-center gap-2 border border-paper bg-paper px-5 py-3 font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-night transition-colors hover:bg-water-bright hover:border-water-bright"
+                  className="group inline-flex min-h-[44px] items-center gap-2 rounded-full border border-paper bg-paper px-5 py-2.5 text-[14px] font-semibold text-night transition-colors hover:bg-water-bright hover:border-water-bright"
                 >
-                  <Database className="size-3.5" />
-                  open the data inventory
-                  <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-0.5" />
+                  <Database className="size-4" />
+                  Open the data inventory
+                  <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
                 </button>
                 <button
                   onClick={() => navigate("model")}
-                  className="group inline-flex min-h-[44px] items-center gap-2 border border-night-line bg-transparent px-5 py-3 font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-paper transition-colors hover:border-paper-dim"
+                  className="group inline-flex min-h-[44px] items-center gap-2 rounded-full border border-white/25 bg-transparent px-5 py-2.5 text-[14px] font-semibold text-paper transition-colors hover:border-paper-dim"
                 >
-                  <FlaskConical className="size-3.5 text-water-bright" />
-                  run the model console
+                  <FlaskConical className="size-4 text-water-bright" />
+                  Run the model console
                 </button>
               </div>
               <div className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-2">
-                <Tag className="border-water-bright/60 text-water-bright">lstm v1.0 · trained</Tag>
-                <Tag className="border-night-line text-paper-dim">deployment — in progress</Tag>
+                <Tag className="bg-water-bright/15 text-water-bright">lstm v1.0 · demo profile</Tag>
+                <Tag className="bg-white/[0.04] text-paper-dim">deployment — in progress</Tag>
                 <span className="font-mono text-[9px] tracking-[0.1em] text-paper-dim/70">
                   {site.period}
                 </span>
@@ -143,18 +143,18 @@ export function OverviewView({ navigate }: { navigate: (v: ViewKey) => void }) {
               caption="Paddy under water — the kayal fields' ordinary risk"
               provenance="photograph · web image search · for illustration"
             />
-            <dl className="mt-6 border border-paper-line bg-paper-2/50 divide-y divide-paper-line">
+            <dl className="mt-6 divide-y divide-paper-line rounded-xl border border-black/[0.08] bg-paper-2/50">
               {[
-                ["BASIN AREA", "1,171.18 km²"],
-                ["MEAN ELEVATION", "4.92 m"],
-                ["ROBUST MINIMUM", "−2.97 m"],
-                ["ELONGATION RATIO", "0.615 — concentrated runoff"],
-                ["AGRICULTURE", "69.8% of basin"],
-                ["LOCAL GAUGES", "6 · NWIC"],
+                ["Basin area", "1,171.18 km²"],
+                ["Mean elevation", "4.92 m"],
+                ["Robust minimum", "−2.97 m"],
+                ["Elongation ratio", "0.615 — concentrated runoff"],
+                ["Agriculture", "69.8% of basin"],
+                ["Local gauges", "6 · NWIC"],
               ].map(([k, v]) => (
                 <div key={k} className="flex items-baseline justify-between px-4 py-2.5">
-                  <dt className="font-mono text-[9px] uppercase tracking-[0.16em] text-ink-soft">{k}</dt>
-                  <dd className="font-mono text-[11px] font-medium tab-nums text-ink">{v}</dd>
+                  <dt className="text-[12px] font-medium text-ink-soft">{k}</dt>
+                  <dd className="font-mono text-[12px] font-medium tab-nums text-ink">{v}</dd>
                 </div>
               ))}
             </dl>
@@ -171,13 +171,13 @@ export function OverviewView({ navigate }: { navigate: (v: ViewKey) => void }) {
             title="August 2018 — the flood that wrote this project's brief."
             lede="One month delivered 31% of an extreme year. The Kuttanad event file records the daily exchange between rain and river — and the district impact tables record what it cost."
           />
-          <div className="mb-8 grid grid-cols-2 gap-px border border-paper-line bg-paper-line lg:grid-cols-4">
+          <div className="mb-8 grid grid-cols-2 gap-3 lg:grid-cols-4">
             {alappuzha2018.map((s) => (
-              <div key={s.label} className="bg-paper px-4 py-4">
-                <div className="font-serif text-[26px] font-semibold leading-none tab-nums text-ink">
+              <div key={s.label} className="rounded-xl border border-black/[0.06] bg-paper px-4 py-4">
+                <div className="text-[28px] font-semibold leading-none tab-nums tracking-[-0.02em] text-ink">
                   {s.value}
                 </div>
-                <div className="mt-2 font-mono text-[10px] uppercase tracking-[0.12em] text-water">{s.label}</div>
+                <div className="mt-2 text-[13px] font-semibold text-water">{s.label}</div>
               </div>
             ))}
           </div>
@@ -291,7 +291,7 @@ export function OverviewView({ navigate }: { navigate: (v: ViewKey) => void }) {
                           : "size-1.5 rounded-full border border-paper-dim"
                     }
                   />
-                  <h3 className="font-mono text-[10px] uppercase tracking-[0.2em] text-paper">{col.t}</h3>
+                  <h3 className="text-[14px] font-semibold text-paper">{col.t}</h3>
                 </div>
                 <ul className="mt-4 space-y-2.5">
                   {col.items.map((it) => (
@@ -307,17 +307,17 @@ export function OverviewView({ navigate }: { navigate: (v: ViewKey) => void }) {
           <div className="mt-8 flex flex-wrap gap-3">
             <button
               onClick={() => navigate("status")}
-              className="group inline-flex min-h-[44px] items-center gap-2 border border-night-line px-5 py-3 font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-paper transition-colors hover:border-paper-dim"
+              className="group inline-flex min-h-[44px] items-center gap-2 rounded-full border border-white/20 px-5 py-2.5 text-[14px] font-semibold text-paper transition-colors hover:border-paper-dim"
             >
-              full project status
-              <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-0.5" />
+              Full project status
+              <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
             </button>
             <button
               onClick={() => navigate("briefing")}
-              className="group inline-flex min-h-[44px] items-center gap-2 border border-water-bright/70 px-5 py-3 font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-water-bright transition-colors hover:bg-water-bright hover:text-night"
+              className="group inline-flex min-h-[44px] items-center gap-2 rounded-full bg-water-bright px-5 py-2.5 text-[14px] font-semibold text-night transition-opacity hover:opacity-90"
             >
               10-slide research briefing
-              <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-0.5" />
+              <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
             </button>
           </div>
         </div>

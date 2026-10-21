@@ -9,9 +9,9 @@ import { auditFlags, auditGroups, type FlagSeverity, type FlagStatus } from "@/l
 import { cn } from "@/lib/utils";
 
 const severityStyle: Record<FlagSeverity, string> = {
-  gap: "border-severe text-severe",
-  caution: "border-flood text-flood",
-  note: "border-paper-line text-ink-soft",
+  gap: "bg-severe/10 text-severe",
+  caution: "bg-flood/10 text-flood",
+  note: "bg-black/[0.05] text-ink-soft",
 };
 
 const severityLabel: Record<FlagSeverity, string> = {
@@ -21,8 +21,8 @@ const severityLabel: Record<FlagSeverity, string> = {
 };
 
 const statusStyle: Record<FlagStatus, string> = {
-  open: "border-paper-line text-ink-soft",
-  mitigated: "border-water text-water",
+  open: "bg-black/[0.04] text-ink-soft",
+  mitigated: "bg-water/10 text-water",
 };
 
 const statusLabel: Record<FlagStatus, string> = {
@@ -42,27 +42,27 @@ export function AuditRegister() {
               <div className="flex items-baseline justify-between gap-3">
                 <h3
                   id={`impact-${g.id}`}
-                  className="font-serif text-[20px] font-semibold leading-tight text-ink"
+                  className="text-[21px] font-semibold tracking-[-0.01em] leading-tight text-ink"
                 >
                   {g.label}
                 </h3>
-                <span className="font-mono text-[11px] font-semibold tab-nums text-flood">
+                <span className="text-[13px] font-semibold tab-nums text-flood">
                   ×{flags.length}
                 </span>
               </div>
               <p className="max-w-2xl text-[14px] leading-6 text-ink-soft">{g.blurb}</p>
             </div>
-            <div className="mt-5 grid gap-px border border-paper-line bg-paper-line md:grid-cols-2">
+            <div className="mt-5 grid gap-2 md:grid-cols-2">
               {flags.map((f) => (
-                <article key={f.no} className="bg-paper p-5">
+                <article key={f.no} className="apple-shadow rounded-xl border border-black/[0.06] bg-paper p-5">
                   <div className="flex items-center justify-between gap-3">
-                    <span className="font-mono text-[10px] font-semibold tracking-[0.14em] text-ink-soft">
-                      FLAG {f.no}
+                    <span className="text-[12px] font-semibold tab-nums text-ink-soft">
+                      Flag {f.no}
                     </span>
                     <span className="flex items-center gap-1.5">
                       <span
                         className={cn(
-                          "font-mono text-[9px] uppercase tracking-[0.12em] border px-2 py-0.5",
+                          "rounded-full px-2.5 py-0.5 text-[12px] font-medium",
                           severityStyle[f.severity]
                         )}
                       >
@@ -70,7 +70,7 @@ export function AuditRegister() {
                       </span>
                       <span
                         className={cn(
-                          "font-mono text-[9px] uppercase tracking-[0.12em] border px-2 py-0.5",
+                          "rounded-full px-2.5 py-0.5 text-[12px] font-medium",
                           statusStyle[f.status]
                         )}
                       >
@@ -78,17 +78,17 @@ export function AuditRegister() {
                       </span>
                     </span>
                   </div>
-                  <h4 className="mt-2.5 font-serif text-[17px] font-semibold leading-snug text-ink">
+                  <h4 className="mt-2.5 text-[17px] font-semibold leading-snug tracking-[-0.01em] text-ink">
                     {f.title}
                   </h4>
                   <p className="mt-2 text-[13.5px] leading-6 text-ink-soft">{f.detail}</p>
-                  <p className="mt-2.5 font-mono text-[10.5px] leading-5 text-ink-soft/80">
-                    <span className="uppercase tracking-[0.12em] text-ink-soft">affects — </span>
+                  <p className="mt-2.5 text-[12px] leading-5 text-ink-soft/80">
+                    <span className="font-semibold text-ink-soft">Affects — </span>
                     {f.affects}
                   </p>
-                  <p className="mt-2.5 border-l-2 border-water pl-3 text-[12.5px] leading-6 text-ink">
-                    <span className="font-mono text-[9.5px] uppercase tracking-[0.14em] text-water">
-                      action ·{" "}
+                  <p className="mt-2.5 border-l-2 border-water pl-3 text-[13px] leading-6 text-ink">
+                    <span className="text-[12px] font-semibold uppercase tracking-[0.08em] text-water">
+                      Action ·{" "}
                     </span>
                     {f.action}
                   </p>
@@ -100,10 +100,10 @@ export function AuditRegister() {
       })}
       <p className="border-l-2 border-paper-line pl-4 text-[13px] leading-6 text-ink-soft">
         Severity is not drama — it is triage. A{" "}
-        <span className="font-mono text-[11.5px] text-severe">missing piece</span> blocks the
-        training table; a <span className="font-mono text-[11.5px] text-flood">caution</span>{" "}
+        <span className="font-medium text-severe">missing piece</span> blocks the
+        training table; a <span className="font-medium text-flood">caution</span>{" "}
         must be fixed before the affected data enters modelling; a{" "}
-        <span className="font-mono text-[11.5px] text-ink-soft">note</span> is handled by
+        <span className="font-medium text-ink-soft">note</span> is handled by
         documented convention. Every flag names the dataset it touches and the next
         corrective action.
       </p>

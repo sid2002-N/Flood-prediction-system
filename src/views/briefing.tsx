@@ -21,13 +21,13 @@ import { cn } from "@/lib/utils";
 
 function StatGrid({ items }: { items: [string, string][] }) {
   return (
-    <div className="grid grid-cols-2 gap-px border border-night-line bg-night-line sm:grid-cols-4">
+    <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
       {items.map(([v, l]) => (
-        <div key={l} className="bg-night px-5 py-4">
-          <div className="font-serif text-[22px] md:text-[27px] font-semibold leading-none tab-nums text-paper">
+        <div key={l} className="rounded-lg border border-night-line bg-night-2 px-5 py-4">
+          <div className="text-[22px] font-semibold leading-none tab-nums tracking-[-0.01em] text-paper md:text-[26px]">
             {v}
           </div>
-          <div className="mt-2 font-mono text-[9px] uppercase tracking-[0.14em] text-water-bright">
+          <div className="mt-2 text-[12px] font-semibold text-water-bright">
             {l}
           </div>
         </div>
@@ -79,24 +79,24 @@ function EventSparkline() {
       className="h-auto w-full"
       role="img"
       aria-label="Reconstructed discharge hydrograph, June to September 2018, peaking at 17.11 on 16 August"
-      style={{ fontFamily: "var(--font-plex-mono), monospace" }}
+      style={{ fontFamily: "var(--font-mono)" }}
     >
-      <rect x={L + 68 * dw} y={T} width={10 * dw} height={ih} fill="#e8b44a" opacity="0.08" />
+      <rect x={L + 68 * dw} y={T} width={10 * dw} height={ih} fill="#ff9f0a" opacity="0.08" />
       {months.map((m) => (
         <g key={m.label}>
-          <line x1={L + m.i * dw} y1={T} x2={L + m.i * dw} y2={T + ih} stroke="#302b21" strokeWidth="1" />
-          <text x={L + m.i * dw + 6} y={H - 10} fontSize="8.5" fill="#a89f8c" letterSpacing="0.12em">
+          <line x1={L + m.i * dw} y1={T} x2={L + m.i * dw} y2={T + ih} stroke="#3a3a3f" strokeWidth="1" />
+          <text x={L + m.i * dw + 6} y={H - 10} fontSize="8.5" fill="#98989d" letterSpacing="0.12em">
             {m.label}
           </text>
         </g>
       ))}
-      <line x1={L} y1={T + ih} x2={W - R} y2={T + ih} stroke="#3a3427" strokeWidth="1" />
-      <path d={path} fill="none" stroke="#38b2a9" strokeWidth="1.6" />
-      <circle cx={X(peakI)} cy={Y(17.11)} r="3.5" fill="#e8b44a" stroke="#12100c" strokeWidth="1.4" />
-      <text x={X(peakI) - 8} y={Y(17.11) - 8} textAnchor="end" fontSize="10" fontWeight="600" fill="#e8b44a">
+      <line x1={L} y1={T + ih} x2={W - R} y2={T + ih} stroke="#48484d" strokeWidth="1" />
+      <path d={path} fill="none" stroke="#22d3ee" strokeWidth="1.6" />
+      <circle cx={X(peakI)} cy={Y(17.11)} r="3.5" fill="#ff9f0a" stroke="#1d1d1f" strokeWidth="1.4" />
+      <text x={X(peakI) - 8} y={Y(17.11) - 8} textAnchor="end" fontSize="10" fontWeight="600" fill="#ff9f0a">
         17.11 · 16 AUG
       </text>
-      <text x={L + 68 * dw + 4} y={T + 10} fontSize="8" fill="#e8b44a" letterSpacing="0.12em">
+      <text x={L + 68 * dw + 4} y={T + 10} fontSize="8" fill="#ff9f0a" letterSpacing="0.12em">
         EVENT WINDOW · AUG 8–17
       </text>
     </svg>
@@ -124,11 +124,11 @@ const SLIDES: { id: string; body: React.ReactNode }[] = [
           sequence of rain that precedes them can be read in time.
         </p>
         <div className="mt-7 flex flex-wrap gap-2">
-          <Tag className="border-water-bright/70 text-water-bright">complex hydrology</Tag>
-          <Tag className="border-night-line text-paper-dim">vulnerable land use</Tag>
-          <Tag className="border-night-line text-paper-dim">early-warning need</Tag>
+          <Tag className="bg-white/[0.06] text-water-bright">complex hydrology</Tag>
+          <Tag className="bg-white/[0.04] text-paper-dim">vulnerable land use</Tag>
+          <Tag className="bg-white/[0.04] text-paper-dim">early-warning need</Tag>
         </div>
-        <p className="mt-8 font-mono text-[10px] uppercase tracking-[0.18em] text-paper-dim/70">
+        <p className="mt-8 text-[12.5px] font-medium text-paper-dim/70">
           {site.brand} · {site.location} · {site.coords}
         </p>
       </div>
@@ -170,7 +170,7 @@ const SLIDES: { id: string; body: React.ReactNode }[] = [
                 i !== 7 ? "border-b border-night-line" : ""
               }`}
             >
-              <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-paper-dim">{k}</span>
+              <span className="text-[12px] font-semibold text-paper-dim">{k}</span>
               <span className="font-mono text-[12px] tab-nums text-paper">{v}</span>
             </div>
           ))}
@@ -187,7 +187,7 @@ const SLIDES: { id: string; body: React.ReactNode }[] = [
         </SlideTitle>
         <div className="mt-6 border border-night-line bg-night-2 p-4">
           <EventSparkline />
-          <p className="mt-2 font-mono text-[9.5px] tracking-[0.04em] text-paper-dim/70">
+          <p className="mt-2 text-[12px] leading-5 text-paper-dim/70">
             reconstructed discharge hydrograph — peaks exact (17.11 file units, 16 Aug), daily shape illustrative
           </p>
         </div>
@@ -228,7 +228,7 @@ const SLIDES: { id: string; body: React.ReactNode }[] = [
             ["08 · literature", "10–500-yr return layers"],
           ].map(([t, d]) => (
             <div key={t} className="border border-night-line bg-night px-4 py-3.5">
-              <div className="font-mono text-[9.5px] font-semibold uppercase tracking-[0.1em] text-water-bright">
+              <div className="text-[13px] font-semibold text-water-bright">
                 {t}
               </div>
               <div className="mt-1.5 font-mono text-[10.5px] text-paper-dim">{d}</div>
@@ -259,14 +259,14 @@ const SLIDES: { id: string; body: React.ReactNode }[] = [
                   <span
                     className={cn(
                       "font-mono text-[11px] font-semibold tab-nums",
-                      g.id === "target" ? "text-[#d15a4c]" : "text-[#e8b44a]"
+                      g.id === "target" ? "text-[#ff453a]" : "text-[#ff9f0a]"
                     )}
                   >
                     ×{flags.length}
                   </span>
                 </div>
                 <p className="mt-2 text-[12.5px] leading-6 text-paper-dim">{g.blurb}</p>
-                <p className="mt-3 border-t border-night-line pt-2.5 font-mono text-[9.5px] leading-5 text-paper-dim/70">
+                <p className="mt-3 border-t border-night-line pt-2.5 text-[12px] leading-5 text-paper-dim/70">
                   flags {flags.map((f) => f.no).join(" · ")} — full register in the data view
                 </p>
               </div>
@@ -296,26 +296,26 @@ const SLIDES: { id: string; body: React.ReactNode }[] = [
             "rainfall lags 1 / 3 / 7 d",
             "rolling sums 3 / 7 / 30 d",
           ].map((f) => (
-            <Tag key={f} className="border-night-line text-paper-dim">
+            <Tag key={f} className="bg-white/[0.04] text-paper-dim">
               {f}
             </Tag>
           ))}
           <span className="font-mono text-[13px] text-water-bright">→</span>
-          <Tag className="border-water-bright bg-water-bright/10 text-water-bright">
+          <Tag className="bg-water-bright/15 text-water-bright">
             one row per day — 21,915 rows
           </Tag>
         </div>
         <div className="mt-6 border border-night-line bg-night-2 p-5">
           <div className="flex flex-wrap items-center gap-x-4 gap-y-3 font-mono text-[10.5px] text-paper-dim">
-            <span className="uppercase tracking-[0.16em] text-water-bright">the window —</span>
+            <span className="text-[13px] font-semibold text-water-bright">The window —</span>
             <span className="flex items-center gap-1.5">
               {Array.from({ length: 30 }).map((_, k) => (
                 <span
                   key={k}
                   className="h-4 w-[7px] border"
                   style={{
-                    background: k < 29 ? "#1b1812" : "#38b2a9",
-                    borderColor: k < 29 ? "#302b21" : "#38b2a9",
+                    background: k < 29 ? "#2c2c2e" : "#22d3ee",
+                    borderColor: k < 29 ? "#3a3a3f" : "#22d3ee",
                   }}
                 />
               ))}
@@ -327,7 +327,7 @@ const SLIDES: { id: string; body: React.ReactNode }[] = [
             </span>
             <span className="text-water-bright">→</span>
             <span>
-              target — <span className="text-[#e8b44a]">discharge t+1 … t+H</span>
+              target — <span className="text-[#ff9f0a]">discharge t+1 … t+H</span>
             </span>
           </div>
           <p className="mt-4 text-[12.5px] leading-6 text-paper-dim">
@@ -358,16 +358,16 @@ const SLIDES: { id: string; body: React.ReactNode }[] = [
             <div key={b.t} className="flex items-center gap-2">
               <div
                 className={cn(
-                  "border px-3.5 py-3",
-                  b.tone === "water" && "border-water-bright bg-water-bright/10",
-                  b.tone === "outline" && "border-night-line bg-night",
-                  b.tone === "amber" && "border-dashed border-[#e8b44a]"
+                  "rounded-lg border px-3.5 py-3",
+                  b.tone === "water" && "border-water-bright/40 bg-water-bright/10",
+                  b.tone === "outline" && "border-night-line bg-night-2",
+                  b.tone === "amber" && "border-dashed border-[#ff9f0a]/60"
                 )}
               >
                 <div
                   className={cn(
-                    "font-mono text-[9.5px] font-semibold uppercase tracking-[0.12em]",
-                    b.tone === "water" ? "text-water-bright" : b.tone === "amber" ? "text-[#e8b44a]" : "text-paper"
+                    "text-[12px] font-semibold",
+                    b.tone === "water" ? "text-water-bright" : b.tone === "amber" ? "text-[#ff9f0a]" : "text-paper"
                   )}
                 >
                   {b.t}
@@ -406,7 +406,7 @@ const SLIDES: { id: string; body: React.ReactNode }[] = [
         <div className="mt-7 grid gap-5 lg:grid-cols-[1.1fr_0.9fr]">
           <div className="space-y-3">
             {[
-              ["inference console", "built — deterministic DEMO profile running now", "#e8b44a"],
+              ["inference console", "built — deterministic DEMO profile running now", "#ff9f0a"],
               ["python service hookup", "documented — contract + FastAPI example ready", "text-paper-dim"],
               ["onnx in-browser", "proposal — needs an ONNX export of the checkpoint", "text-paper-dim"],
               ["live weights", "pending release clearance — one config line to switch", "text-paper-dim"],
@@ -427,8 +427,8 @@ const SLIDES: { id: string; body: React.ReactNode }[] = [
             <div>01 · scenario — 2018-like event</div>
             <div>02 · intensity — ×1.0 (the audited event)</div>
             <div>03 · horizon — 30 days</div>
-            <div className="text-[#e8b44a]">04 · read — peak 17.11 on D+16</div>
-            <div className="text-[#e8b44a]">05 · class — severe · 7 d above stage</div>
+            <div className="text-[#ff9f0a]">04 · read — peak 17.11 on D+16</div>
+            <div className="text-[#ff9f0a]">05 · class — severe · 7 d above stage</div>
             <div className="mt-2 text-paper-dim/60">
               the demo reproduces the recorded 2018 peak exactly — and says so
               on every run
@@ -466,10 +466,10 @@ const SLIDES: { id: string; body: React.ReactNode }[] = [
           ].map(([k, v]) => (
             <div key={k} className="bg-night p-5">
               <div className="flex items-center justify-between gap-3">
-                <span className="font-mono text-[10.5px] font-semibold uppercase tracking-[0.1em] text-paper">
+                <span className="text-[13px] font-semibold text-paper">
                   {k}
                 </span>
-                <span className="font-mono text-[9px] uppercase tracking-[0.12em] border border-[#e8b44a]/70 px-1.5 py-0.5 text-[#e8b44a]">
+                <span className="rounded-full bg-[#ff9f0a]/15 px-2.5 py-0.5 text-[11.5px] font-medium text-[#ff9f0a]">
                   pending
                 </span>
               </div>
@@ -507,8 +507,8 @@ const SLIDES: { id: string; body: React.ReactNode }[] = [
             </div>
           ))}
         </div>
-        <p className="mt-10 font-mono text-[9px] uppercase tracking-[0.16em] text-paper-dim">
-          sources — {sourceRegistry.map((s) => s.name).join(" · ")}
+        <p className="mt-10 text-[12px] font-medium text-paper-dim">
+          Sources — {sourceRegistry.map((s) => s.name).join(" · ")}
         </p>
         <p className="mt-3 font-mono text-[9px] tracking-[0.08em] text-paper-dim/50">
           {site.brand} · {site.location} · {site.coords} · end of briefing
@@ -520,7 +520,13 @@ const SLIDES: { id: string; body: React.ReactNode }[] = [
 
 /* ------------------------------- deck shell ------------------------------- */
 
-export function BriefingView({ navigate }: { navigate: (v: ViewKey) => void }) {
+export function BriefingView({
+  navigate,
+  active = true,
+}: {
+  navigate: (v: ViewKey) => void;
+  active?: boolean;
+}) {
   const [idx, setIdx] = useState(0);
   const total = SLIDES.length;
 
@@ -530,6 +536,8 @@ export function BriefingView({ navigate }: { navigate: (v: ViewKey) => void }) {
   );
 
   useEffect(() => {
+    // views are permanently mounted — only respond to keys while visible
+    if (!active) return;
     const h = (e: KeyboardEvent) => {
       const t = e.target as HTMLElement | null;
       if (
@@ -556,7 +564,7 @@ export function BriefingView({ navigate }: { navigate: (v: ViewKey) => void }) {
     };
     window.addEventListener("keydown", h);
     return () => window.removeEventListener("keydown", h);
-  }, [go, total]);
+  }, [go, total, active]);
 
   return (
     <div className="grid-night flex flex-col bg-night text-paper">
@@ -589,11 +597,11 @@ export function BriefingView({ navigate }: { navigate: (v: ViewKey) => void }) {
         <div className="flex flex-wrap items-center justify-between gap-y-3 border-t border-night-line py-4">
           <button
             onClick={() => (idx === 0 ? navigate("overview") : go(-1))}
-            className="inline-flex min-h-[44px] items-center gap-2 border border-night-line px-4 py-2.5 font-mono text-[10px] uppercase tracking-[0.16em] text-paper-dim transition-colors hover:border-paper-dim hover:text-paper"
+            className="inline-flex min-h-[44px] items-center gap-2 rounded-full border border-night-line px-4 py-2.5 text-[13px] font-medium text-paper-dim transition-colors hover:border-paper-dim hover:text-paper"
             aria-label={idx === 0 ? "Back to dossier" : "Previous slide"}
           >
             <ChevronLeft className="size-4" />
-            {idx === 0 ? "back to dossier" : "prev"}
+            {idx === 0 ? "Back to dossier" : "Prev"}
           </button>
           <div className="hidden items-center gap-1.5 sm:flex">
             {SLIDES.map((s, i) => (
@@ -615,26 +623,26 @@ export function BriefingView({ navigate }: { navigate: (v: ViewKey) => void }) {
           </div>
           <div className="flex items-center gap-4">
             <span
-              className="font-mono text-[11px] tab-nums tracking-[0.2em] text-paper-dim"
+              className="text-[13px] font-medium tab-nums text-paper-dim"
               aria-live="polite"
             >
               {String(idx + 1).padStart(2, "0")} / {total}
             </span>
             <button
               onClick={() => navigate("overview")}
-              className="inline-flex min-h-[44px] items-center gap-2 border border-night-line px-3 py-2.5 font-mono text-[10px] uppercase tracking-[0.16em] text-paper-dim transition-colors hover:border-severe hover:text-severe"
+              className="inline-flex min-h-[44px] items-center gap-2 rounded-full border border-night-line px-3 py-2.5 text-[13px] font-medium text-paper-dim transition-colors hover:border-severe hover:text-severe"
               aria-label="Exit briefing, return to dossier"
             >
               <X className="size-4" />
-              <span className="hidden sm:inline">exit</span>
+              <span className="hidden sm:inline">Exit</span>
             </button>
             <button
               onClick={() => go(1)}
               disabled={idx === total - 1}
-              className="inline-flex min-h-[44px] items-center gap-2 border border-water-bright px-4 py-2.5 font-mono text-[10px] uppercase tracking-[0.16em] text-water-bright transition-colors hover:bg-water-bright hover:text-night disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-water-bright"
+              className="inline-flex min-h-[44px] items-center gap-2 rounded-full bg-water-bright px-4 py-2.5 text-[13px] font-semibold text-night transition-opacity hover:opacity-90 disabled:opacity-30"
               aria-label="Next slide"
             >
-              next
+              Next
               <ChevronRight className="size-4" />
             </button>
           </div>
