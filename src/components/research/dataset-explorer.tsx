@@ -7,8 +7,9 @@
  * audit detail per row.
  */
 import { Fragment, useMemo, useState } from "react";
-import { ChevronDown, Search } from "lucide-react";
+import { ChevronDown, ExternalLink, Search } from "lucide-react";
 import { inventory, type AuditState, type Dataset } from "@/lib/content/inventory";
+import { datasetDriveLinks } from "@/lib/content/drive-links";
 import { AuditChip } from "@/components/research/furniture";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -261,6 +262,27 @@ export function DatasetExplorer() {
                               {r.audit === "preview" && ": first rows inspected; full review pending."}
                               {r.audit === "read" && ": file opened and reviewed in full."}
                             </p>
+                            {(datasetDriveLinks[r.name]?.length ?? 0) > 0 && (
+                              <div className="mt-3">
+                                <p className="font-mono text-[9.5px] uppercase tracking-[0.16em] text-ink-soft">
+                                  files on drive
+                                </p>
+                                <div className="mt-2 flex flex-wrap gap-1.5">
+                                  {datasetDriveLinks[r.name].map((l) => (
+                                    <a
+                                      key={l.url}
+                                      href={l.url}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="inline-flex items-center gap-1 border border-paper-line px-1.5 py-0.5 font-mono text-[9.5px] text-ink-soft transition-colors hover:border-water hover:text-water"
+                                    >
+                                      {l.label}
+                                      <ExternalLink className="size-2.5" />
+                                    </a>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
                           </div>
                         </div>
                       </td>

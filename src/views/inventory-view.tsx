@@ -17,6 +17,12 @@ import {
   sarProvenance,
 } from "@/lib/content/series";
 import { inventory } from "@/lib/content/inventory";
+import {
+  driveRoot,
+  driveCaveat,
+  categoryDriveLinks,
+} from "@/lib/content/drive-links";
+import { ExternalLink } from "lucide-react";
 
 export function InventoryView() {
   return (
@@ -41,6 +47,18 @@ export function InventoryView() {
           <span className="font-mono text-[13px] text-ink-soft">catalogued</span>{" "}
           (known from structure, not yet opened). Where a dataset is broken, the
           defect is listed with it — nothing is smoothed over.
+        </p>
+        <a
+          href={driveRoot.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group mt-5 inline-flex min-h-[44px] items-center gap-2 border border-paper-line bg-paper-2/60 px-4 py-2.5 font-mono text-[10.5px] font-semibold uppercase tracking-[0.14em] text-ink transition-colors hover:border-water hover:text-water"
+        >
+          <ExternalLink className="size-3.5" />
+          open the drive archive — 22 folders
+        </a>
+        <p className="mt-3 max-w-3xl text-[12.5px] leading-5 text-ink-soft/80">
+          {driveCaveat}
         </p>
       </div>
 
@@ -114,6 +132,25 @@ export function InventoryView() {
                   </div>
                 ))}
               </div>
+              {(categoryDriveLinks[cat.id]?.length ?? 0) > 0 && (
+                <div className="mt-4 flex flex-wrap items-center gap-1.5 border-t border-paper-line/70 pt-3">
+                  <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-ink-soft/70">
+                    drive ·
+                  </span>
+                  {categoryDriveLinks[cat.id].map((l) => (
+                    <a
+                      key={l.url}
+                      href={l.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 border border-paper-line px-1.5 py-0.5 font-mono text-[9.5px] text-ink-soft transition-colors hover:border-water hover:text-water"
+                    >
+                      {l.label}
+                      <ExternalLink className="size-2.5" />
+                    </a>
+                  ))}
+                </div>
+              )}
             </article>
           ))}
         </div>
